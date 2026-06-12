@@ -44,6 +44,26 @@ describe('mapProviderLiveEvent', () => {
     expect(match.tourLevel).toBe('atp');
   });
 
+  it('maps Finished feed events to a final result, deriving the winner from sets won', () => {
+    const match = mapProviderLiveEvent(
+      {
+        id: '99',
+        name: 'Jannik Sinner vs Joao Fonseca',
+        league: 'ATP Halle',
+        score: '7-6,5-7,6-4',
+        status: 'Finished',
+        points: '0-0',
+        indicator: '0,0',
+      },
+      RETRIEVED_AT,
+    );
+    if (match.state.status !== 'finished') {
+      throw new Error('expected a finished state');
+    }
+    expect(match.state.winner).toBe(1);
+    expect(match.state.finalSets).toHaveLength(3);
+  });
+
   it('classifies W-prefixed ITF events and away-side servers, keeping advantage points intact', () => {
     const match = mapProviderLiveEvent(
       {

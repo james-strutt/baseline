@@ -15,6 +15,7 @@ export function CompactScoreRow({ match }: CompactScoreRowProps): ReactElement {
     match.state.status === 'live' || match.state.status === 'suspended'
       ? match.state.score
       : null;
+  const finalSets = match.state.status === 'finished' ? match.state.finalSets : null;
   return (
     <Link
       to="/matches/$fixtureId"
@@ -31,11 +32,14 @@ export function CompactScoreRow({ match }: CompactScoreRowProps): ReactElement {
         </span>
         <span className="shrink-0 font-score text-[15px] tabular-nums">
           {score !== null ? formatSetLine(score.sets) : ''}
+          {finalSets !== null ? formatSetLine(finalSets) : ''}
         </span>
       </span>
       <span className="mt-0.5 flex items-baseline justify-between font-body text-xs text-centre-court/60">
         <span>{match.tournamentName}</span>
-        <span className="font-score tabular-nums">{score?.gamePoints ?? ''}</span>
+        <span className="font-score tabular-nums">
+          {score?.gamePoints ?? (finalSets !== null ? 'Final' : '')}
+        </span>
       </span>
     </Link>
   );

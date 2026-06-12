@@ -125,8 +125,11 @@ export const httpTennisDataPort: TennisDataPort = {
   async fetchOrderOfPlay(): Promise<TennisMatch[]> {
     return fetchOrderOfPlayFor(formatLocalIsoDate(currentUtcMs(), detectUserTimeZone()));
   },
+  /* Just-finished matches surface transiently in the live feed; durable
+   * results history arrives with the ingestion archive (plan §6). */
   async fetchRecentResults(): Promise<TennisMatch[]> {
-    return [];
+    const matches = await fetchLiveTennisMatches();
+    return matches.filter((match) => match.state.status === 'finished');
   },
   async fetchRankings(tour: RankingTour): Promise<RankingEntry[]> {
     const payload = await fetchFeed<ProviderRankingsResponse>(`feed=rankings&tour=${tour}`);

@@ -31,8 +31,17 @@ function parseSetScores(score: string): SetScore[] {
   });
 }
 
+function winnerFromSets(sets: SetScore[]): 1 | 2 {
+  const player1Sets = sets.filter((set) => set.p1Games > set.p2Games).length;
+  const player2Sets = sets.filter((set) => set.p2Games > set.p1Games).length;
+  return player1Sets >= player2Sets ? 1 : 2;
+}
+
 function liveEventState(raw: ProviderLiveEvent, retrievedAtIso: string): MatchState {
   const sets = parseSetScores(raw.score);
+  if (raw.status === 'Finished') {
+    return { status: 'finished', finalSets: sets, winner: winnerFromSets(sets) };
+  }
   const score = {
     sets,
     gamePoints: raw.points.replace('-', '–'),

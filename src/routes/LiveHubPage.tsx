@@ -8,6 +8,7 @@ import { useFavourites } from '@/hooks/useFavourites';
 import { useLiveMatches, useOrderOfPlay, useRecentResults } from '@/hooks/useTennisData';
 import { useUserClock } from '@/hooks/useUserClock';
 import type { TennisMatch, TourLevel } from '@/types/matches';
+import { youtubeHighlightsSearchUrl } from '@/utils/links/youtubeHighlights';
 import { matchInvolvesPlayer } from '@/utils/matches/matchInvolvesPlayer';
 import { resultLine } from '@/utils/score/formatScoreline';
 
@@ -151,7 +152,15 @@ function WhileYouSleptSection({ results }: { results: TennisMatch[] }): ReactEle
       {results.map((match) => (
         <p key={match.fixtureId} className="font-body text-[15px]">
           {resultLine(match)}
-          <span className="text-centre-court/60"> · {match.tournamentName}</span>
+          <span className="text-centre-court/60"> · {match.tournamentName} · </span>
+          <a
+            href={youtubeHighlightsSearchUrl(match)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-ribbon underline underline-offset-2"
+          >
+            Highlights ›
+          </a>
         </p>
       ))}
     </section>

@@ -11,6 +11,7 @@ import type {
   TennisMatch,
   TimelinePoint,
 } from '@/types/matches';
+import { youtubeHighlightsSearchUrl } from '@/utils/links/youtubeHighlights';
 
 type CentreTab = 'points' | 'stats' | 'h2h';
 
@@ -174,6 +175,16 @@ export function MatchCentrePage(): ReactElement {
       ) : (
         <ScorePlaque match={match} isHero />
       )}
+      {match.state.status === 'finished' ? (
+        <a
+          href={youtubeHighlightsSearchUrl(match)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block font-body text-sm text-ribbon underline underline-offset-2"
+        >
+          Highlights on YouTube ›
+        </a>
+      ) : null}
       <MomentumStrip momentum={momentum} />
       <nav className="flex gap-6 border-b border-centre-court/15">
         {CENTRE_TABS.map((centreTab) => (

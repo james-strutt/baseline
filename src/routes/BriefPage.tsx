@@ -5,6 +5,7 @@ import { useFavourites } from '@/hooks/useFavourites';
 import { useMatchCentre, useOrderOfPlay, useRecentResults } from '@/hooks/useTennisData';
 import { useUserClock } from '@/hooks/useUserClock';
 import type { TennisMatch } from '@/types/matches';
+import { youtubeHighlightsSearchUrl } from '@/utils/links/youtubeHighlights';
 import { matchInvolvesPlayer } from '@/utils/matches/matchInvolvesPlayer';
 import { matchupLabel } from '@/utils/score/formatScoreline';
 import { formatLocalDate } from '@/utils/time';
@@ -56,8 +57,23 @@ export function BriefPage(): ReactElement {
       </header>
       <section className="space-y-3">
         <h2 className={BRIEF_HEADING_CLASS}>While you slept</h2>
+        {results.length === 0 ? (
+          <p className="font-body text-[15px] text-centre-court/70">
+            No overnight results filed — play resumes today.
+          </p>
+        ) : null}
         {results.map((match) => (
-          <ScorePlaque key={match.fixtureId} match={match} />
+          <div key={match.fixtureId} className="space-y-1.5">
+            <ScorePlaque match={match} />
+            <a
+              href={youtubeHighlightsSearchUrl(match)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block font-body text-sm text-ribbon underline underline-offset-2"
+            >
+              Highlights on YouTube ›
+            </a>
+          </div>
         ))}
       </section>
       <section>
