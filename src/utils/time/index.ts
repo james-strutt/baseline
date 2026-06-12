@@ -1,6 +1,7 @@
 export {
   formatCountdown,
   formatLocalDate,
+  formatLocalIsoDate,
   formatLocalKickoff,
   formatLocalTime,
   formatLocalWeekday,

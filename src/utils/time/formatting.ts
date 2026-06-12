@@ -41,6 +41,16 @@ export function formatUserClock(utcMs: number, timeZone: string): string {
   return `${parts.get('hour') ?? ''}:${parts.get('minute') ?? ''} ${zoneName}`.trim();
 }
 
+/* en-CA renders dates as YYYY-MM-DD — the provider's fixtures-by-date key. */
+export function formatLocalIsoDate(utcMs: number, timeZone: string): string {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date(utcMs));
+}
+
 export function formatLocalDate(utcMs: number, timeZone: string): string {
   const parts = zonedParts(utcMs, timeZone, {
     weekday: 'long',

@@ -163,7 +163,8 @@ export function MatchCentrePage(): ReactElement {
           ‹ Back
         </Link>
         <p className="font-body text-xs uppercase tracking-[0.18em] text-centre-court/70">
-          {match.tournamentName} · {match.roundName}
+          {match.tournamentName}
+          {match.roundName !== undefined ? ` · ${match.roundName}` : ''}
         </p>
       </header>
       {match.state.status === 'scheduled' ? (

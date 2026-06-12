@@ -94,10 +94,10 @@ export default [
       '@typescript-eslint/prefer-nullish-coalescing': 'off',
     },
   },
-  // vite.config.ts is type-checked against tsconfig.node.json and may use
-  // console and relative imports (scripts relaxation).
+  // vite.config.ts and Vercel functions are type-checked against
+  // tsconfig.node.json and may use console and relative imports.
   {
-    files: ['vite.config.ts'],
+    files: ['vite.config.ts', 'api/**/*.ts'],
     languageOptions: {
       parser: tsparser,
       parserOptions: {

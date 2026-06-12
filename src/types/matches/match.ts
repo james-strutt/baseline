@@ -29,12 +29,14 @@ export type MatchState =
   | { status: 'suspended'; score: LiveScore; lastUpdatedUtc: string }
   | { status: 'finished'; finalSets: SetScore[]; winner: 1 | 2 };
 
+/* roundName and surface are absent from the provider's live feed until the
+ * ingestion service enriches events — render them only when known. */
 export interface TennisMatch {
   fixtureId: number;
   tournamentName: string;
   tourLevel: TourLevel;
-  roundName: string;
-  surface: Surface;
+  roundName?: string;
+  surface?: Surface;
   scheduledUtc: string;
   isProvisional: boolean;
   player1: MatchPlayer;

@@ -24,14 +24,15 @@ import type { FormResult, PlayerProfile, RankingEntry } from '@/types/players';
 
 const GRAND_SLAM_NAMES = ['Australian Open', 'Roland Garros', 'Wimbledon', 'US Open'];
 
-function mapTourLevel(leagueName: string): TourLevel {
+export function mapTourLevel(leagueName: string): TourLevel {
   if (GRAND_SLAM_NAMES.some((slam) => leagueName.includes(slam))) {
     return 'grand-slam';
   }
   if (leagueName.includes('Challenger')) {
     return 'challenger';
   }
-  if (leagueName.includes('ITF')) {
+  /* ITF events arrive as "W35 Cuiaba" / "M25 Nottingham" in the live feed. */
+  if (leagueName.includes('ITF') || /\b[WM]\d+\b/.test(leagueName)) {
     return 'itf';
   }
   if (leagueName.includes('UTR')) {
@@ -40,7 +41,7 @@ function mapTourLevel(leagueName: string): TourLevel {
   return leagueName.includes('WTA') ? 'wta' : 'atp';
 }
 
-function mapSurface(rawSurface: string): Surface {
+export function mapSurface(rawSurface: string): Surface {
   const lowered = rawSurface.toLowerCase();
   if (lowered.includes('grass')) {
     return 'grass';

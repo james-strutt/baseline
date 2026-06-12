@@ -39,7 +39,11 @@ function plaqueFooterLine(state: MatchState, live: LiveScore | null): string {
     return 'Play suspended — resuming shortly.';
   }
   if (live !== null) {
-    return `${live.gamePoints} · ${setOrdinalLabel(live.currentSet)} · ${elapsedLabel(live.elapsedMinutes)}`;
+    const parts = [live.gamePoints, setOrdinalLabel(live.currentSet)];
+    if (live.elapsedMinutes > 0) {
+      parts.push(elapsedLabel(live.elapsedMinutes));
+    }
+    return parts.join(' · ');
   }
   return 'Final score';
 }
@@ -110,7 +114,8 @@ export function ScorePlaque({ match, isHero = false }: ScorePlaqueProps): ReactE
         {isLive ? <LiveDot /> : null}
         <span className="truncate">
           {isLive ? 'Live · ' : ''}
-          {match.tournamentName} · {match.surface}
+          {match.tournamentName}
+          {match.surface !== undefined ? ` · ${match.surface}` : ''}
         </span>
       </header>
       <div className={isHero ? 'space-y-4' : 'space-y-3'}>

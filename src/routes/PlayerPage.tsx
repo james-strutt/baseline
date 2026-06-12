@@ -7,6 +7,7 @@ import { useFavourites } from '@/hooks/useFavourites';
 import { useOrderOfPlay, usePlayerProfile } from '@/hooks/useTennisData';
 import { useUserClock } from '@/hooks/useUserClock';
 import type { FormResult, PlayerProfile, SurfaceWinRates } from '@/types/players';
+
 import { matchInvolvesPlayer } from '@/utils/matches/matchInvolvesPlayer';
 
 function FormStrip({ form }: { form: FormResult[] }): ReactElement {
@@ -48,6 +49,26 @@ function surfaceSummaryLine(rates: SurfaceWinRates): string {
   return `Hard ${rates.hard}% · Clay ${rates.clay}% · Grass ${rates.grass}% win rate`;
 }
 
+function hasSurfaceRates(rates: SurfaceWinRates): boolean {
+  return rates.hard + rates.clay + rates.grass > 0;
+}
+
+function profileCareerLine(profile: PlayerProfile): string {
+  return [
+    profile.country,
+    profile.currentRank > 0 ? `No. ${profile.currentRank}` : '',
+    profile.rankingPoints > 0 ? `${profile.rankingPoints.toLocaleString('en-AU')} pts` : '',
+  ]
+    .filter((part) => part !== '')
+    .join(' · ');
+}
+
+function profileStyleLine(profile: PlayerProfile): string {
+  return [profile.plays, profile.turnedPro > 0 ? `Turned pro ${profile.turnedPro}` : '']
+    .filter((part) => part !== '')
+    .join(' · ');
+}
+
 export function PlayerPage(): ReactElement {
   const { playerId } = useParams({ strict: false });
   const playerIdNumber = Number(playerId ?? '0');
@@ -83,13 +104,8 @@ export function PlayerPage(): ReactElement {
       <div className="space-y-6">
         <header className="space-y-1">
           <h1 className="font-display text-3xl uppercase tracking-[0.06em]">{profile.fullName}</h1>
-          <p className="font-body text-sm text-centre-court/70">
-            {profile.country} · No. {profile.currentRank} ·{' '}
-            {profile.rankingPoints.toLocaleString('en-AU')} pts
-          </p>
-          <p className="font-body text-sm text-centre-court/70">
-            {profile.plays} · Turned pro {profile.turnedPro}
-          </p>
+          <p className="font-body text-sm text-centre-court/70">{profileCareerLine(profile)}</p>
+          <p className="font-body text-sm text-centre-court/70">{profileStyleLine(profile)}</p>
         </header>
         <button
           type="button"
@@ -99,19 +115,23 @@ export function PlayerPage(): ReactElement {
         >
           {following ? '♥ Following' : '♡ Follow'}
         </button>
-        <section className="space-y-2">
-          <h2 className="font-display text-sm uppercase tracking-[0.18em] text-centre-court/80">
-            Form
-          </h2>
-          <FormStrip form={profile.formLastTen} />
-        </section>
+        {profile.formLastTen.length > 0 ? (
+          <section className="space-y-2">
+            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-centre-court/80">
+              Form
+            </h2>
+            <FormStrip form={profile.formLastTen} />
+          </section>
+        ) : null}
         <HonoursPanel profile={profile} />
-        <section className="space-y-1">
-          <h2 className="font-display text-sm uppercase tracking-[0.18em] text-centre-court/80">
-            Surfaces
-          </h2>
-          <p className="font-body text-sm">{surfaceSummaryLine(profile.surfaceWinRates)}</p>
-        </section>
+        {hasSurfaceRates(profile.surfaceWinRates) ? (
+          <section className="space-y-1">
+            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-centre-court/80">
+              Surfaces
+            </h2>
+            <p className="font-body text-sm">{surfaceSummaryLine(profile.surfaceWinRates)}</p>
+          </section>
+        ) : null}
       </div>
       <div className="space-y-3">
         <h2 className="font-display text-sm uppercase tracking-[0.18em] text-centre-court/80">

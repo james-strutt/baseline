@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { currentUtcMs, detectUserTimeZone, formatUserClock } from '@/utils/time';
 
-const CLOCK_REFRESH_MS = 30_000;
+const CLOCK_REFRESH_MS = 10_000;
 
 export interface UseUserClockReturn {
   nowMs: number;

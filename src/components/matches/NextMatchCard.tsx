@@ -28,7 +28,8 @@ export function NextMatchCard({ match, nowMs, timeZone }: NextMatchCardProps): R
         />
       </p>
       <p className="mt-1 font-body text-xs text-centre-court/60">
-        {match.tournamentName} · {match.roundName}
+        {match.tournamentName}
+        {match.roundName !== undefined ? ` · ${match.roundName}` : ''}
       </p>
     </article>
   );

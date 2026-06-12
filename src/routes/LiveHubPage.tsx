@@ -84,7 +84,18 @@ function MyMatchesSection({
   );
 }
 
-function AllCourtsSection({ matches }: { matches: TennisMatch[] }): ReactElement {
+function updatedAgoLabel(nowMs: number, lastUpdatedMs: number): string {
+  const seconds = Math.max(0, Math.round((nowMs - lastUpdatedMs) / 1000));
+  return `Updated ${seconds}s ago`;
+}
+
+interface AllCourtsSectionProps {
+  matches: TennisMatch[];
+  nowMs: number;
+  lastUpdatedMs: number;
+}
+
+function AllCourtsSection({ matches, nowMs, lastUpdatedMs }: AllCourtsSectionProps): ReactElement {
   const [filter, setFilter] = useState<CourtFilter>('all');
   const visibleMatches =
     filter === 'all' ? matches : matches.filter((match) => match.tourLevel === filter);
@@ -119,7 +130,11 @@ function AllCourtsSection({ matches }: { matches: TennisMatch[] }): ReactElement
           {visibleMatches.map((match) => (
             <CompactScoreRow key={match.fixtureId} match={match} />
           ))}
-          <p className="px-2 pt-3 font-body text-xs text-centre-court/50">Updated 12s ago</p>
+          {lastUpdatedMs > 0 ? (
+            <p className="px-2 pt-3 font-body text-xs text-centre-court/50">
+              {updatedAgoLabel(nowMs, lastUpdatedMs)}
+            </p>
+          ) : null}
         </div>
       )}
     </section>
@@ -156,7 +171,7 @@ function LiveHubSkeleton(): ReactElement {
 }
 
 export function LiveHubPage(): ReactElement {
-  const { matches: liveMatches, isLoading, isError } = useLiveMatches();
+  const { matches: liveMatches, isLoading, isError, lastUpdatedMs } = useLiveMatches();
   const { matches: orderOfPlay } = useOrderOfPlay();
   const { results } = useRecentResults();
   const { favouritePlayerIds } = useFavourites();
@@ -207,7 +222,7 @@ export function LiveHubPage(): ReactElement {
         />
         <WhileYouSleptSection results={results} />
       </div>
-      <AllCourtsSection matches={liveMatches} />
+      <AllCourtsSection matches={liveMatches} nowMs={nowMs} lastUpdatedMs={lastUpdatedMs} />
     </div>
   );
 }
