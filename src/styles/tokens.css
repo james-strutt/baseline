@@ -1,0 +1,27 @@
+/*
+ * The Club token system — plan §4.2. The palette and type scale are defined
+ * here and nowhere else; every colour traces to a physical artefact of lawn
+ * tennis. Consumed as Tailwind utilities and CSS custom properties.
+ */
+@theme {
+  /* Evening Centre Court grass — plaques, dark canvas, honours boards */
+  --color-centre-court: #0e3b27;
+  --color-centre-court-deep: #0a2a1c;
+  /* The all-white dress code — light-mode canvas */
+  --color-whites: #f7f4ec;
+  /* Championship-ribbon purple — interactive elements, selected states */
+  --color-ribbon: #46286e;
+  /* Trophy gold — hairline rules and frames only, never a fill */
+  --color-gilt: #a8893b;
+  /* Court lines — text on green, scoreboard digits */
+  --color-chalk: #ffffff;
+  /* The tennis ball — reserved exclusively for LIVE indicators and the serve dot */
+  --color-optic: #cfd916;
+
+  --font-display: 'Libre Caslon Display', 'Georgia', serif;
+  --font-body: 'Albert Sans', 'Helvetica Neue', sans-serif;
+  --font-score: 'Spline Sans Mono', 'Courier New', monospace;
+
+  /* Crisp plaque edges, not pill shapes */
+  --radius-plaque: 4px;
+}

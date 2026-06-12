@@ -1,0 +1,60 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+body {
+  background-color: var(--color-whites);
+  color: var(--color-centre-court);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/*
+ * The scoreboard flip — the one orchestrated motion in the app (plan §4.2):
+ * a 140ms vertical roll with a slight mechanical ease-out, exactly the
+ * hand-flipped plaque at Wimbledon. Nothing else in a score row animates.
+ */
+@keyframes plaque-flip {
+  from {
+    transform: translateY(-100%);
+    opacity: 0.4;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes plaque-fade {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.plaque-flip {
+  animation: plaque-flip 140ms cubic-bezier(0.33, 0.9, 0.5, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plaque-flip {
+    animation: plaque-fade 140ms ease-out;
+  }
+}
+
+/* Skeletons shimmer in muted green, not grey */
+@keyframes club-shimmer {
+  from {
+    opacity: 0.45;
+  }
+  to {
+    opacity: 0.75;
+  }
+}
+
+.club-skeleton {
+  animation: club-shimmer 900ms ease-in-out infinite alternate;
+  background-color: color-mix(in srgb, var(--color-centre-court) 12%, var(--color-whites));
+  border-radius: var(--radius-plaque);
+}

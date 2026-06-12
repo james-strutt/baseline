@@ -1,0 +1,11 @@
+node_modules/
+dist/
+dev-dist/
+coverage/
+# Holds the RapidAPI key — local MCP config only, never committed (CLAUDE.md: Security)
+.mcp.json
+*.local
+.env
+.env.*
+!.env.example
+.supabase/

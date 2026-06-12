@@ -1,0 +1,66 @@
+import type { ReactElement } from 'react';
+
+export interface MembershipPanelProps {
+  onContinue(): void;
+  onDismiss(): void;
+}
+
+const PLUS_BENEFITS = [
+  'Unlimited players',
+  'Walk-on & set alerts',
+  'Live Activities & widgets',
+  'The daily Wake-up Brief',
+  'No advertising',
+];
+
+/*
+ * The W11 paywall, shown at the third-favourite moment (plan §9.2). Ribbon
+ * purple + gilt is the premium identity, used nowhere else in the free app.
+ */
+export function MembershipPanel({ onContinue, onDismiss }: MembershipPanelProps): ReactElement {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-centre-court-deep/70 p-6"
+      onClick={onDismiss}
+      role="presentation"
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Baseline Plus membership"
+        className="w-full max-w-md space-y-5 rounded-plaque border border-gilt bg-whites p-6"
+        onClick={(event): void => event.stopPropagation()}
+      >
+        <div className="rounded-plaque border border-gilt bg-centre-court p-5">
+          <p className="font-display text-lg uppercase tracking-[0.18em] text-gilt">
+            Membership has its privileges
+          </p>
+        </div>
+        <p className="font-body text-[15px]">Follow every player you love.</p>
+        <ul className="space-y-1.5 font-body text-[15px]">
+          {PLUS_BENEFITS.map((benefit) => (
+            <li key={benefit} className="flex items-baseline gap-2">
+              <span className="text-ribbon">♥</span>
+              {benefit}
+            </li>
+          ))}
+        </ul>
+        <button
+          type="button"
+          onClick={onContinue}
+          className="w-full cursor-pointer rounded-plaque bg-ribbon px-4 py-3 font-body text-[15px] text-chalk transition-opacity hover:opacity-90"
+        >
+          A$54.99/year — two months free
+        </button>
+        <p className="text-center font-body text-sm text-centre-court/60">or A$6.99 monthly</p>
+        <button
+          type="button"
+          onClick={onDismiss}
+          className="w-full cursor-pointer pt-1 text-center font-body text-sm text-centre-court/60 transition-colors hover:text-ribbon"
+        >
+          Not now
+        </button>
+      </div>
+    </div>
+  );
+}
