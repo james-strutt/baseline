@@ -101,7 +101,7 @@ function AllCourtsSection({ matches, nowMs, lastUpdatedMs }: AllCourtsSectionPro
     filter === 'all' ? matches : matches.filter((match) => match.tourLevel === filter);
   return (
     <section className="space-y-4">
-      <div className="flex items-baseline justify-between gap-3">
+      <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h2 className={SECTION_HEADING_CLASS}>All courts ({visibleMatches.length})</h2>
         <div className="flex gap-1.5">
           {COURT_FILTERS.map((courtFilter) => (
@@ -210,7 +210,7 @@ export function LiveHubPage(): ReactElement {
     );
   }
   return (
-    <div className="grid gap-10 lg:grid-cols-[7fr_5fr] xl:gap-16">
+    <div className="grid grid-cols-1 gap-10 lg:grid-cols-[7fr_5fr] xl:gap-16">
       <div className="space-y-10">
         <MyMatchesSection
           favouriteLiveMatches={favouriteLiveMatches}

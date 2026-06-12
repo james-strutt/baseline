@@ -100,7 +100,7 @@ export function PlayerPage(): ReactElement {
     .sort((a, b) => Date.parse(a.scheduledUtc) - Date.parse(b.scheduledUtc))[0];
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[3fr_2fr]">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[3fr_2fr]">
       <div className="space-y-6">
         <header className="space-y-1">
           <h1 className="font-display text-3xl uppercase tracking-[0.06em]">{profile.fullName}</h1>
