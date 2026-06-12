@@ -3,6 +3,7 @@ import {
   mapProviderFixture,
   mapProviderH2H,
   mapProviderLiveEvent,
+  mapProviderLiveStats,
   mapProviderPlayerProfile,
   mapProviderRankingRow,
   mapProviderTimeline,
@@ -178,6 +179,18 @@ describe('mapProviderRankingRow and mapProviderPlayerProfile', () => {
     expect(timeline[0]?.games).toBe('1');
     expect(momentum).toEqual([7, 3, 4]);
     expect(timeline[2]?.description).toBe('Rain delay');
+  });
+
+  it('labels live stats with percentage suffixes, skipping fields the provider omits', () => {
+    const lines = mapProviderLiveStats({
+      aces: ['5', '5'],
+      win_1st_serve: ['74', '90'],
+    });
+    expect(lines).toEqual([
+      { label: 'Aces', p1: '5', p2: '5' },
+      { label: 'First serve won', p1: '74%', p2: '90%' },
+    ]);
+    expect(mapProviderLiveStats(null)).toEqual([]);
   });
 
   it('tallies head-to-head wins by our match orientation, whatever order the provider lists', () => {

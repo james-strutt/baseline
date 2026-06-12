@@ -2,6 +2,7 @@ import {
   mapProviderFixture,
   mapProviderH2H,
   mapProviderLiveEvent,
+  mapProviderLiveStats,
   mapProviderPlayerProfile,
   mapProviderRankingRow,
   mapProviderTimeline,
@@ -9,13 +10,19 @@ import {
 import type {
   ProviderH2HResponse,
   ProviderLiveResponse,
+  ProviderMatchDetailResponse,
   ProviderOrderOfPlayResponse,
   ProviderPlayerResponse,
   ProviderRankingsResponse,
-  ProviderTimelineResponse,
 } from '@/services/tennisData/providerShapes';
 import type { TennisDataPort } from '@/services/tennisData/tennisDataPort';
-import type { H2HSummary, MatchCentreData, TennisMatch, TimelinePoint } from '@/types/matches';
+import type {
+  H2HSummary,
+  MatchCentreData,
+  MatchStatLine,
+  TennisMatch,
+  TimelinePoint,
+} from '@/types/matches';
 import type { PlayerProfile, RankingEntry, RankingTour } from '@/types/players';
 import { currentUtcMs, detectUserTimeZone, formatLocalIsoDate } from '@/utils/time';
 
@@ -102,16 +109,23 @@ async function fetchH2HSummary(match: TennisMatch): Promise<H2HSummary | undefin
   }
 }
 
-async function fetchLiveTimeline(
-  match: TennisMatch,
-): Promise<{ timeline: TimelinePoint[]; momentum: number[] }> {
+interface LiveMatchDetail {
+  timeline: TimelinePoint[];
+  momentum: number[];
+  stats: MatchStatLine[];
+}
+
+async function fetchLiveDetail(match: TennisMatch): Promise<LiveMatchDetail> {
   try {
-    const payload = await fetchFeed<ProviderTimelineResponse>(
-      `feed=timeline&id=${match.fixtureId}`,
+    const home = encodeURIComponent(match.player1.displayName);
+    const away = encodeURIComponent(match.player2.displayName);
+    const payload = await fetchFeed<ProviderMatchDetailResponse>(
+      `feed=matchdetail&home=${home}&away=${away}`,
     );
-    return mapProviderTimeline(payload.results, match);
+    const mapped = mapProviderTimeline(payload.result?.timeline ?? [], match);
+    return { ...mapped, stats: mapProviderLiveStats(payload.result?.stats) };
   } catch {
-    return { timeline: [], momentum: [] };
+    return { timeline: [], momentum: [], stats: [] };
   }
 }
 
@@ -145,10 +159,10 @@ export const httpTennisDataPort: TennisDataPort = {
     );
     if (liveMatch !== undefined) {
       const [detail, h2h] = await Promise.all([
-        fetchLiveTimeline(liveMatch),
+        fetchLiveDetail(liveMatch),
         fetchH2HSummary(liveMatch),
       ]);
-      return { match: liveMatch, ...detail, stats: [], h2h };
+      return { match: liveMatch, ...detail, h2h };
     }
     const fixture = (await this.fetchOrderOfPlay()).find(
       (match) => match.fixtureId === fixtureId,

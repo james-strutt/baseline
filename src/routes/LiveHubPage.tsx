@@ -85,9 +85,11 @@ function MyMatchesSection({
   );
 }
 
+/* "Checked", not "updated" — the provider's own cadence can lag behind our
+ * fetch loop, and the caption must not pretend otherwise (plan §13). */
 function updatedAgoLabel(nowMs: number, lastUpdatedMs: number): string {
   const seconds = Math.max(0, Math.round((nowMs - lastUpdatedMs) / 1000));
-  return `Updated ${seconds}s ago`;
+  return `Checked ${seconds}s ago`;
 }
 
 interface AllCourtsSectionProps {

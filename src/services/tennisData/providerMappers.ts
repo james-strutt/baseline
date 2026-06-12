@@ -3,13 +3,16 @@ import type {
   ProviderFixture,
   ProviderH2HMatch,
   ProviderLiveEvent,
+  ProviderLiveStats,
   ProviderPlayerProfile,
   ProviderRankingRow,
+  ProviderStatPair,
   ProviderTimelineEntry,
 } from '@/services/tennisData/providerShapes';
 import type {
   H2HSummary,
   MatchState,
+  MatchStatLine,
   SetScore,
   TennisMatch,
   TimelinePoint,
@@ -157,6 +160,31 @@ export function mapProviderH2H(
       score: meeting.result,
     })),
   };
+}
+
+const LIVE_STAT_LABELS: ReadonlyArray<{
+  key: keyof ProviderLiveStats;
+  label: string;
+  suffix: string;
+}> = [
+  { key: 'aces', label: 'Aces', suffix: '' },
+  { key: 'double_faults', label: 'Double faults', suffix: '' },
+  { key: 'win_1st_serve', label: 'First serve won', suffix: '%' },
+  { key: 'break_point_conversions', label: 'Break points converted', suffix: '%' },
+];
+
+export function mapProviderLiveStats(stats: ProviderLiveStats | null | undefined): MatchStatLine[] {
+  if (stats === null || stats === undefined) {
+    return [];
+  }
+  const lines: MatchStatLine[] = [];
+  for (const { key, label, suffix } of LIVE_STAT_LABELS) {
+    const pair: ProviderStatPair | undefined = stats[key];
+    if (pair !== undefined) {
+      lines.push({ label, p1: `${pair[0]}${suffix}`, p2: `${pair[1]}${suffix}` });
+    }
+  }
+  return lines;
 }
 
 const TIMELINE_ENTRY_PATTERN = /^Game (\d+) - (.+?) - (.+)$/;

@@ -71,8 +71,23 @@ async function tourPlayerProfile(tour: Tour, playerId: string): Promise<unknown>
   }
 }
 
-async function timelineFeed(eventId: string): Promise<unknown> {
-  return callUpstream(`/tennis/v2/extend/api/event/timeline/${eventId}`);
+/* One call returns score, live stats, and the game timeline; the event is
+ * keyed by player names and may sit on yesterday's UTC date. */
+async function matchDetailFeed(home: string, away: string): Promise<unknown> {
+  for (const offsetDays of [0, 1]) {
+    const date = new Date(Date.now() - offsetDays * 86_400_000).toISOString().slice(0, 10);
+    try {
+      const payload = await callUpstream<{ result: unknown }>(
+        `/tennis/v2/extend/api/event/live/${encodeURIComponent(home)}/${encodeURIComponent(away)}/${date}`,
+      );
+      if (payload.result !== null && payload.result !== undefined) {
+        return payload;
+      }
+    } catch {
+      // Try the previous UTC date before giving up.
+    }
+  }
+  return { result: null };
 }
 
 interface UpstreamH2HMatch {
@@ -192,7 +207,7 @@ async function orderOfPlayFeed(date: string): Promise<unknown> {
  * leaves a lone viewer perpetually one interval behind. */
 const FEED_CACHE_HEADERS: Record<string, string> = {
   live: 's-maxage=12, stale-while-revalidate=8',
-  timeline: 's-maxage=30, stale-while-revalidate=15',
+  matchdetail: 's-maxage=30, stale-while-revalidate=15',
   rankings: 's-maxage=3600, stale-while-revalidate=3600',
   'order-of-play': 's-maxage=300, stale-while-revalidate=600',
   player: 's-maxage=3600, stale-while-revalidate=3600',
@@ -217,7 +232,8 @@ const FEED_HANDLERS: Record<string, (req: VercelRequest) => Promise<unknown>> = 
   rankings: (req) => rankingsFeed(feedParam(req, 'tour') === 'wta' ? 'wta' : 'atp'),
   'order-of-play': (req) => orderOfPlayFeed(requireParam(req, 'date', /^\d{4}-\d{2}-\d{2}$/)),
   player: (req) => playerFeed(requireParam(req, 'id', /^\d+$/)),
-  timeline: (req) => timelineFeed(requireParam(req, 'id', /^\d+$/)),
+  matchdetail: (req) =>
+    matchDetailFeed(requireParam(req, 'home', /^.{2,80}$/), requireParam(req, 'away', /^.{2,80}$/)),
   h2h: (req) =>
     h2hFeed(
       feedParam(req, 'tour') === 'wta' ? 'wta' : 'atp',

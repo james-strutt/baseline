@@ -95,6 +95,18 @@ export interface ProviderTimelineEntry {
   text: string;
 }
 
-export interface ProviderTimelineResponse {
-  results: ProviderTimelineEntry[];
+export type ProviderStatPair = [string, string];
+
+export interface ProviderLiveStats {
+  aces?: ProviderStatPair;
+  double_faults?: ProviderStatPair;
+  win_1st_serve?: ProviderStatPair;
+  break_point_conversions?: ProviderStatPair;
+}
+
+export interface ProviderMatchDetailResponse {
+  result: {
+    stats?: ProviderLiveStats | null;
+    timeline?: ProviderTimelineEntry[] | null;
+  } | null;
 }
