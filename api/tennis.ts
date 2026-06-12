@@ -81,11 +81,37 @@ async function playerFeed(playerId: string): Promise<unknown> {
   return { data: null };
 }
 
-async function calendarFor(tour: Tour, year: string): Promise<Map<number, UpstreamCalendarEntry>> {
-  const payload = await callUpstream<{ data: UpstreamCalendarEntry[] }>(
-    `/tennis/v2/${tour}/tournament/calendar/${year}`,
-  );
-  return new Map(payload.data.map((entry) => [entry.id, entry]));
+/* The season calendar only lists not-yet-started tournaments, so running
+ * events resolve through per-tournament info lookups instead. */
+async function tournamentInfoFor(
+  tour: Tour,
+  tournamentId: number,
+): Promise<UpstreamCalendarEntry | undefined> {
+  try {
+    const payload = await callUpstream<{ data: UpstreamCalendarEntry }>(
+      `/tennis/v2/${tour}/tournament/info/${tournamentId}`,
+    );
+    return payload.data;
+  } catch {
+    return undefined;
+  }
+}
+
+const TOURNAMENT_LOOKUP_LIMIT = 25;
+
+async function tournamentMapFor(
+  tour: Tour,
+  tournamentIds: number[],
+): Promise<Map<number, UpstreamCalendarEntry>> {
+  const distinctIds = [...new Set(tournamentIds)].slice(0, TOURNAMENT_LOOKUP_LIMIT);
+  const entries = await Promise.all(distinctIds.map((id) => tournamentInfoFor(tour, id)));
+  const tournamentMap = new Map<number, UpstreamCalendarEntry>();
+  for (const entry of entries) {
+    if (entry !== undefined) {
+      tournamentMap.set(entry.id, entry);
+    }
+  }
+  return tournamentMap;
 }
 
 function isSinglesFixture(fixture: UpstreamFixture): boolean {
@@ -110,14 +136,18 @@ function joinedTournamentFields(entry: UpstreamCalendarEntry | undefined): Joine
 }
 
 async function tourOrderOfPlay(tour: Tour, date: string): Promise<unknown[]> {
-  const [fixtures, calendar] = await Promise.all([
-    callUpstream<{ data: UpstreamFixture[] }>(`/tennis/v2/${tour}/fixtures/${date}`),
-    calendarFor(tour, date.slice(0, 4)),
-  ]);
-  return fixtures.data.filter(isSinglesFixture).map((fixture) => ({
+  const fixtures = await callUpstream<{ data: UpstreamFixture[] }>(
+    `/tennis/v2/${tour}/fixtures/${date}`,
+  );
+  const singles = fixtures.data.filter(isSinglesFixture);
+  const tournaments = await tournamentMapFor(
+    tour,
+    singles.map((fixture) => fixture.tournamentId),
+  );
+  return singles.map((fixture) => ({
     ...fixture,
     tour,
-    ...joinedTournamentFields(calendar.get(fixture.tournamentId)),
+    ...joinedTournamentFields(tournaments.get(fixture.tournamentId)),
   }));
 }
 
