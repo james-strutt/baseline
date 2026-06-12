@@ -75,6 +75,34 @@ async function timelineFeed(eventId: string): Promise<unknown> {
   return callUpstream(`/tennis/v2/extend/api/event/timeline/${eventId}`);
 }
 
+interface UpstreamH2HMatch {
+  date: string;
+  match_winner: number;
+  result: string;
+  tournamentId: number;
+  player1: UpstreamFixturePlayer;
+  player2: UpstreamFixturePlayer;
+}
+
+const H2H_MEETING_LIMIT = 6;
+
+async function h2hFeed(tour: Tour, player1: string, player2: string): Promise<unknown> {
+  const payload = await callUpstream<{ data: UpstreamH2HMatch[] }>(
+    `/tennis/v2/${tour}/h2h/matches/${player1}/${player2}/`,
+  );
+  const meetings = payload.data.slice(0, H2H_MEETING_LIMIT);
+  const tournaments = await tournamentMapFor(
+    tour,
+    meetings.map((meeting) => meeting.tournamentId),
+  );
+  return {
+    matches: meetings.map((meeting) => ({
+      ...meeting,
+      tournamentName: tournaments.get(meeting.tournamentId)?.name ?? null,
+    })),
+  };
+}
+
 async function playerFeed(playerId: string): Promise<unknown> {
   for (const tour of TOURS) {
     const data = await tourPlayerProfile(tour, playerId);
@@ -168,6 +196,7 @@ const FEED_CACHE_HEADERS: Record<string, string> = {
   rankings: 's-maxage=3600, stale-while-revalidate=3600',
   'order-of-play': 's-maxage=300, stale-while-revalidate=600',
   player: 's-maxage=3600, stale-while-revalidate=3600',
+  h2h: 's-maxage=3600, stale-while-revalidate=3600',
 };
 
 function feedParam(req: VercelRequest, name: string): string {
@@ -189,6 +218,12 @@ const FEED_HANDLERS: Record<string, (req: VercelRequest) => Promise<unknown>> = 
   'order-of-play': (req) => orderOfPlayFeed(requireParam(req, 'date', /^\d{4}-\d{2}-\d{2}$/)),
   player: (req) => playerFeed(requireParam(req, 'id', /^\d+$/)),
   timeline: (req) => timelineFeed(requireParam(req, 'id', /^\d+$/)),
+  h2h: (req) =>
+    h2hFeed(
+      feedParam(req, 'tour') === 'wta' ? 'wta' : 'atp',
+      requireParam(req, 'p1', /^\d+$/),
+      requireParam(req, 'p2', /^\d+$/),
+    ),
 };
 
 async function resolveFeed(req: VercelRequest, feed: string): Promise<unknown> {

@@ -77,6 +77,19 @@ export interface ProviderPlayerResponse {
   data: ProviderPlayerProfile | null;
 }
 
+export interface ProviderH2HMatch {
+  date: string;
+  match_winner: number;
+  result: string;
+  tournamentName: string | null;
+  player1: ProviderFixturePlayer;
+  player2: ProviderFixturePlayer;
+}
+
+export interface ProviderH2HResponse {
+  matches: ProviderH2HMatch[];
+}
+
 export interface ProviderTimelineEntry {
   id: string;
   text: string;

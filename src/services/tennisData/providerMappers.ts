@@ -1,12 +1,14 @@
 import { mapSurface, mapTourLevel } from '@/services/tennisData/mappers';
 import type {
   ProviderFixture,
+  ProviderH2HMatch,
   ProviderLiveEvent,
   ProviderPlayerProfile,
   ProviderRankingRow,
   ProviderTimelineEntry,
 } from '@/services/tennisData/providerShapes';
 import type {
+  H2HSummary,
   MatchState,
   SetScore,
   TennisMatch,
@@ -125,6 +127,26 @@ export function mapProviderPlayerProfile(raw: ProviderPlayerProfile): PlayerProf
     surfaceWinRates: { hard: 0, clay: 0, grass: 0 },
     careerTitles: 0,
     grandSlamTitles: 0,
+  };
+}
+
+export function mapProviderH2H(
+  matches: ProviderH2HMatch[],
+  ourPlayer1Id: number,
+  ourPlayer2Id: number,
+): H2HSummary {
+  return {
+    p1Wins: matches.filter((meeting) => meeting.match_winner === ourPlayer1Id).length,
+    p2Wins: matches.filter((meeting) => meeting.match_winner === ourPlayer2Id).length,
+    meetings: matches.map((meeting) => ({
+      year: Number(meeting.date.slice(0, 4)),
+      eventName: meeting.tournamentName ?? 'Tour meeting',
+      winnerName:
+        meeting.match_winner === meeting.player1.id
+          ? meeting.player1.name
+          : meeting.player2.name,
+      score: meeting.result,
+    })),
   };
 }
 

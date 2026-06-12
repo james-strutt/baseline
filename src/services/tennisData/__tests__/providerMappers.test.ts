@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   mapProviderFixture,
+  mapProviderH2H,
   mapProviderLiveEvent,
   mapProviderPlayerProfile,
   mapProviderRankingRow,
@@ -157,6 +158,38 @@ describe('mapProviderRankingRow and mapProviderPlayerProfile', () => {
     expect(timeline[0]?.games).toBe('1');
     expect(momentum).toEqual([7, 3, 4]);
     expect(timeline[2]?.description).toBe('Rain delay');
+  });
+
+  it('tallies head-to-head wins by our match orientation, whatever order the provider lists', () => {
+    const medvedev = { id: 22807, name: 'Daniil Medvedev', countryAcr: 'RUS' };
+    const cilic = { id: 6101, name: 'Marin Cilic', countryAcr: 'CRO' };
+    const summary = mapProviderH2H(
+      [
+        {
+          date: '2022-05-30T00:00:00.000Z',
+          match_winner: 6101,
+          result: '6-2 6-3 6-2',
+          tournamentName: 'Roland Garros',
+          player1: cilic,
+          player2: medvedev,
+        },
+        {
+          date: '2021-12-05T00:00:00.000Z',
+          match_winner: 22807,
+          result: '7-6(7) 6-2',
+          tournamentName: null,
+          player1: medvedev,
+          player2: cilic,
+        },
+      ],
+      22807,
+      6101,
+    );
+    expect(summary.p1Wins).toBe(1);
+    expect(summary.p2Wins).toBe(1);
+    expect(summary.meetings[0]?.winnerName).toBe('Marin Cilic');
+    expect(summary.meetings[0]?.year).toBe(2022);
+    expect(summary.meetings[1]?.eventName).toBe('Tour meeting');
   });
 
   it('degrades gracefully when optional profile sections are missing', () => {
