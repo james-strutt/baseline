@@ -33,7 +33,7 @@ export function Masthead(): ReactElement {
         >
           ◷ {clockLabel}
         </span>
-        <nav className="-mb-1 flex w-full items-center gap-5 overflow-x-auto pb-1 lg:order-2 lg:ml-auto lg:w-auto lg:justify-end">
+        <nav className="-mb-1 hidden w-full items-center gap-5 overflow-x-auto pb-1 sm:flex lg:order-2 lg:ml-auto lg:w-auto lg:justify-end">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.to}

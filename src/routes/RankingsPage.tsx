@@ -35,7 +35,7 @@ function RankingRow({
 }: RankingRowProps): ReactElement {
   return (
     <div
-      className={`flex items-baseline gap-4 px-4 py-2.5 ${
+      className={`flex items-baseline gap-3 px-3 py-2.5 sm:gap-4 sm:px-4 ${
         isOnBoard ? 'text-chalk' : 'border-b border-centre-court/10 text-centre-court'
       }`}
     >
@@ -53,7 +53,11 @@ function RankingRow({
       >
         {entry.playerName}
       </Link>
-      <span className={`font-body text-xs ${isOnBoard ? 'text-chalk/60' : 'text-centre-court/50'}`}>
+      <span
+        className={`hidden font-body text-xs sm:inline ${
+          isOnBoard ? 'text-chalk/60' : 'text-centre-court/50'
+        }`}
+      >
         {entry.countryCode}
       </span>
       <FavouriteToggleButton

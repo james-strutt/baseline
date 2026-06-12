@@ -6,6 +6,7 @@ import {
   Outlet,
 } from '@tanstack/react-router';
 import type { ReactElement } from 'react';
+import { BottomTabBar } from '@/components/layout/BottomTabBar';
 import { Masthead } from '@/components/layout/Masthead';
 import { BriefPage } from '@/routes/BriefPage';
 import { LiveHubPage } from '@/routes/LiveHubPage';
@@ -19,9 +20,10 @@ function RootLayout(): ReactElement {
   return (
     <div className="min-h-screen">
       <Masthead />
-      <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
+      <main className="mx-auto w-full max-w-7xl px-4 py-6 pb-24 sm:px-6 sm:py-8 sm:pb-10 lg:px-10 lg:py-10">
         <Outlet />
       </main>
+      <BottomTabBar />
     </div>
   );
 }

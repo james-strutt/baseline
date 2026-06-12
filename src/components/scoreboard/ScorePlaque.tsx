@@ -60,8 +60,8 @@ function PlaqueRow({ player, games, isServing, isHero }: PlaqueRowProps): ReactE
   return (
     <div className="flex items-center justify-between gap-4">
       <span
-        className={`truncate font-display uppercase tracking-[0.08em] ${
-          isHero ? 'text-2xl md:text-3xl' : 'text-lg'
+        className={`min-w-0 truncate font-display uppercase tracking-[0.08em] ${
+          isHero ? 'text-xl sm:text-2xl md:text-3xl' : 'text-lg'
         }`}
       >
         {player.displayName}
@@ -72,16 +72,18 @@ function PlaqueRow({ player, games, isServing, isHero }: PlaqueRowProps): ReactE
           </span>
         ) : null}
       </span>
-      <span className="flex items-center gap-3">
+      <span className="flex shrink-0 items-center gap-2 sm:gap-3">
         <span className={isServing ? 'visible' : 'invisible'}>
           <LiveDot />
         </span>
-        <span className="flex gap-1.5">
+        <span className="flex gap-1 sm:gap-1.5">
           {games.map((gamesWon, setIndex) => (
             <span
               key={setIndex}
               className={`flex items-center justify-center rounded-[2px] bg-centre-court-deep/80 shadow-inner ${
-                isHero ? 'h-12 w-9 text-2xl md:h-14 md:w-10 md:text-3xl' : 'h-9 w-7 text-lg'
+                isHero
+                  ? 'h-10 w-7 text-xl sm:h-12 sm:w-9 sm:text-2xl md:h-14 md:w-10 md:text-3xl'
+                  : 'h-9 w-7 text-lg'
               }`}
             >
               <FlipDigit value={String(gamesWon)} />

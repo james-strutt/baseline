@@ -23,18 +23,18 @@ function OrderOfPlayRow({ match, timeZone, isFavouriteMatch }: OrderOfPlayRowPro
     <Link
       to="/matches/$fixtureId"
       params={{ fixtureId: String(match.fixtureId) }}
-      className="flex items-baseline gap-3 border-b border-centre-court/10 px-2 py-2.5 transition-colors hover:bg-centre-court/5"
+      className="grid grid-cols-[4.75rem_1fr] items-baseline gap-x-3 border-b border-centre-court/10 px-2 py-3 transition-colors hover:bg-centre-court/5"
     >
-      <span className="w-20 shrink-0 font-score text-sm tabular-nums">
+      <span className="font-score text-sm tabular-nums">
         {match.isProvisional ? '~' : ''}
         {formatLocalTime(match.scheduledUtc, timeZone)}
       </span>
-      <span className="flex min-w-0 items-center gap-2 font-body text-sm">
+      <span className="flex min-w-0 items-center gap-2 font-body text-[15px]">
         {isLive ? <LiveDot /> : null}
-        <span className="truncate">{matchupLabel(match)}</span>
-        {isFavouriteMatch ? <span className="text-ribbon">♥</span> : null}
+        <span className="min-w-0 truncate">{matchupLabel(match)}</span>
+        {isFavouriteMatch ? <span className="shrink-0 text-ribbon">♥</span> : null}
       </span>
-      <span className="ml-auto shrink-0 font-body text-xs text-centre-court/60">
+      <span className="col-start-2 mt-0.5 truncate font-body text-xs text-centre-court/60">
         {match.tournamentName}
         {match.isProvisional ? ' · not before' : ''}
       </span>
@@ -63,8 +63,8 @@ export function OrderOfPlayPage(): ReactElement {
   }
   return (
     <div className="mx-auto max-w-4xl space-y-6">
-      <header className="flex items-baseline justify-between gap-3">
-        <h1 className="font-display text-xl uppercase tracking-[0.12em]">Order of Play</h1>
+      <header className="space-y-1">
+        <h1 className="font-display text-2xl uppercase tracking-[0.12em]">Order of Play</h1>
         <p className="font-body text-xs text-centre-court/60">Times shown in your local time</p>
       </header>
       {segments.map((segment) => (

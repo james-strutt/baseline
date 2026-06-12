@@ -23,10 +23,10 @@ export function CompactScoreRow({ match }: CompactScoreRowProps): ReactElement {
     >
       <span className="flex items-baseline justify-between gap-3">
         <span className="flex min-w-0 items-center gap-1.5 font-body text-[15px]">
-          <span className="truncate">{playerLabelWithRank(match.player1)}</span>
+          <span className="min-w-0 truncate">{playerLabelWithRank(match.player1)}</span>
           {score?.servingPlayer === 1 ? <LiveDot /> : null}
-          <span className="text-centre-court/50">v</span>
-          <span className="truncate">{playerLabelWithRank(match.player2)}</span>
+          <span className="shrink-0 text-centre-court/50">v</span>
+          <span className="min-w-0 truncate">{playerLabelWithRank(match.player2)}</span>
           {score?.servingPlayer === 2 ? <LiveDot /> : null}
         </span>
         <span className="shrink-0 font-score text-[15px] tabular-nums">

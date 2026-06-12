@@ -52,7 +52,7 @@ describe('live hub', () => {
 describe('order of play', () => {
   it('marks provisional times with ~ and "not before" — never pretending precision', async () => {
     await renderRoute('/order-of-play');
-    expect(await screen.findByText('Order of Play')).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'Order of Play' })).toBeTruthy();
     const provisionalNotes = await screen.findAllByText(/not before/);
     expect(provisionalNotes.length).toBeGreaterThan(0);
   });
