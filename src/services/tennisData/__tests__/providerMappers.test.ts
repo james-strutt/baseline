@@ -4,6 +4,7 @@ import {
   mapProviderLiveEvent,
   mapProviderPlayerProfile,
   mapProviderRankingRow,
+  mapProviderTimeline,
 } from '@/services/tennisData/providerMappers';
 
 /*
@@ -121,12 +122,41 @@ describe('mapProviderRankingRow and mapProviderPlayerProfile', () => {
       countryAcr: 'SRB',
       currentRank: 7,
       points: 11540,
+      form: ['w', 'w', 'l', 'w'],
       country: { name: 'Serbia' },
       information: { turnedPro: '2003', plays: 'Right-Handed, Two-Handed Backhand' },
     });
     expect(profile.country).toBe('Serbia');
     expect(profile.plays).toBe('Right-Handed');
     expect(profile.turnedPro).toBe(2003);
+    expect(profile.formLastTen).toEqual(['W', 'W', 'L', 'W']);
+  });
+
+  it('narrates the game timeline and scores momentum by holds and breaks', () => {
+    const match = mapProviderLiveEvent(
+      {
+        id: '2939906',
+        name: 'Daniil Medvedev vs Marin Cilic',
+        league: 'ATP Hertogenbosch',
+        score: '6-2',
+        status: 'InPlay',
+        points: '0-0',
+        indicator: '1,0',
+      },
+      RETRIEVED_AT,
+    );
+    const { timeline, momentum } = mapProviderTimeline(
+      [
+        { id: '1', text: 'Game 1 - Daniil Medvedev - breaks to 15' },
+        { id: '2', text: 'Game 2 - Marin Cilic - holds to 40' },
+        { id: '3', text: 'Rain delay' },
+      ],
+      match,
+    );
+    expect(timeline[0]?.description).toBe('Daniil Medvedev breaks to 15');
+    expect(timeline[0]?.games).toBe('1');
+    expect(momentum).toEqual([7, 3, 4]);
+    expect(timeline[2]?.description).toBe('Rain delay');
   });
 
   it('degrades gracefully when optional profile sections are missing', () => {

@@ -63,12 +63,16 @@ async function rankingsFeed(tour: Tour): Promise<unknown> {
 async function tourPlayerProfile(tour: Tour, playerId: string): Promise<unknown> {
   try {
     const payload = await callUpstream<{ data: unknown }>(
-      `/tennis/v2/${tour}/player/profile/${playerId}`,
+      `/tennis/v2/${tour}/player/profile/${playerId}?include=form`,
     );
     return payload.data ?? null;
   } catch {
     return null;
   }
+}
+
+async function timelineFeed(eventId: string): Promise<unknown> {
+  return callUpstream(`/tennis/v2/extend/api/event/timeline/${eventId}`);
 }
 
 async function playerFeed(playerId: string): Promise<unknown> {
@@ -156,8 +160,11 @@ async function orderOfPlayFeed(date: string): Promise<unknown> {
   return { fixtures: perTour.flat() };
 }
 
+/* Short revalidation windows on live feeds: a long stale-while-revalidate
+ * leaves a lone viewer perpetually one interval behind. */
 const FEED_CACHE_HEADERS: Record<string, string> = {
-  live: 's-maxage=15, stale-while-revalidate=45',
+  live: 's-maxage=12, stale-while-revalidate=8',
+  timeline: 's-maxage=30, stale-while-revalidate=15',
   rankings: 's-maxage=3600, stale-while-revalidate=3600',
   'order-of-play': 's-maxage=300, stale-while-revalidate=600',
   player: 's-maxage=3600, stale-while-revalidate=3600',
@@ -181,6 +188,7 @@ const FEED_HANDLERS: Record<string, (req: VercelRequest) => Promise<unknown>> = 
   rankings: (req) => rankingsFeed(feedParam(req, 'tour') === 'wta' ? 'wta' : 'atp'),
   'order-of-play': (req) => orderOfPlayFeed(requireParam(req, 'date', /^\d{4}-\d{2}-\d{2}$/)),
   player: (req) => playerFeed(requireParam(req, 'id', /^\d+$/)),
+  timeline: (req) => timelineFeed(requireParam(req, 'id', /^\d+$/)),
 };
 
 async function resolveFeed(req: VercelRequest, feed: string): Promise<unknown> {

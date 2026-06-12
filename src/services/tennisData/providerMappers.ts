@@ -4,9 +4,15 @@ import type {
   ProviderLiveEvent,
   ProviderPlayerProfile,
   ProviderRankingRow,
+  ProviderTimelineEntry,
 } from '@/services/tennisData/providerShapes';
-import type { MatchState, SetScore, TennisMatch } from '@/types/matches';
-import type { PlayerProfile, RankingEntry } from '@/types/players';
+import type {
+  MatchState,
+  SetScore,
+  TennisMatch,
+  TimelinePoint,
+} from '@/types/matches';
+import type { FormResult, PlayerProfile, RankingEntry } from '@/types/players';
 
 function toGames(text: string | undefined): number {
   const value = Number(text);
@@ -98,6 +104,13 @@ export function mapProviderRankingRow(raw: ProviderRankingRow): RankingEntry {
   };
 }
 
+function mapProviderForm(form: string[] | null | undefined): FormResult[] {
+  return (form ?? [])
+    .map((entry) => entry.toUpperCase())
+    .filter((entry): entry is FormResult => entry === 'W' || entry === 'L')
+    .slice(0, 10);
+}
+
 export function mapProviderPlayerProfile(raw: ProviderPlayerProfile): PlayerProfile {
   const turnedPro = Number(raw.information?.turnedPro ?? '');
   return {
@@ -108,9 +121,52 @@ export function mapProviderPlayerProfile(raw: ProviderPlayerProfile): PlayerProf
     turnedPro: Number.isFinite(turnedPro) ? turnedPro : 0,
     currentRank: raw.currentRank ?? 0,
     rankingPoints: raw.points ?? 0,
-    formLastTen: [],
+    formLastTen: mapProviderForm(raw.form),
     surfaceWinRates: { hard: 0, clay: 0, grass: 0 },
     careerTitles: 0,
     grandSlamTitles: 0,
   };
+}
+
+const TIMELINE_ENTRY_PATTERN = /^Game (\d+) - (.+?) - (.+)$/;
+
+export interface MappedTimeline {
+  timeline: TimelinePoint[];
+  momentum: number[];
+}
+
+function timelineMomentumValue(winnerName: string, wasBreak: boolean, match: TennisMatch): number {
+  const wonByPlayer1 = winnerName === match.player1.displayName;
+  if (wonByPlayer1) {
+    return wasBreak ? 7 : 5;
+  }
+  return wasBreak ? 1 : 3;
+}
+
+/* The provider narrates each game ("Game 12 - Marin Cilic - breaks to 30");
+ * holds and breaks also drive the momentum strip. */
+export function mapProviderTimeline(
+  entries: ProviderTimelineEntry[],
+  match: TennisMatch,
+): MappedTimeline {
+  const timeline: TimelinePoint[] = [];
+  const momentum: number[] = [];
+  for (const entry of entries) {
+    const parsed = TIMELINE_ENTRY_PATTERN.exec(entry.text);
+    if (parsed === null) {
+      timeline.push({ games: '', points: '', description: entry.text });
+      momentum.push(4);
+      continue;
+    }
+    const [, gameNumber, winnerName, outcome] = parsed;
+    timeline.push({
+      games: gameNumber ?? '',
+      points: '',
+      description: `${winnerName ?? ''} ${outcome ?? ''}`.trim(),
+    });
+    momentum.push(
+      timelineMomentumValue(winnerName ?? '', (outcome ?? '').includes('break'), match),
+    );
+  }
+  return { timeline, momentum };
 }

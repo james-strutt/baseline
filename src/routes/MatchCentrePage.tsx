@@ -59,7 +59,9 @@ function PointByPointList({ timeline }: { timeline: TimelinePoint[] }): ReactEle
           className="flex gap-4 border-b border-centre-court/10 py-2 font-body text-[15px]"
         >
           <span className="w-10 shrink-0 font-score tabular-nums">{point.games}</span>
-          <span className="w-14 shrink-0 font-score tabular-nums">{point.points}</span>
+          {point.points !== '' ? (
+            <span className="w-14 shrink-0 font-score tabular-nums">{point.points}</span>
+          ) : null}
           <span className="min-w-0">{point.description}</span>
         </p>
       ))}
@@ -71,7 +73,7 @@ function StatsTable({ stats, match }: { stats: MatchStatLine[]; match: TennisMat
   if (stats.length === 0) {
     return (
       <p className="font-body text-[15px] text-centre-court/70">
-        In-match statistics begin when play does.
+        No statistics filed for this court yet.
       </p>
     );
   }

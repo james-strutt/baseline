@@ -3,12 +3,14 @@ import {
   mapProviderLiveEvent,
   mapProviderPlayerProfile,
   mapProviderRankingRow,
+  mapProviderTimeline,
 } from '@/services/tennisData/providerMappers';
 import type {
   ProviderLiveResponse,
   ProviderOrderOfPlayResponse,
   ProviderPlayerResponse,
   ProviderRankingsResponse,
+  ProviderTimelineResponse,
 } from '@/services/tennisData/providerShapes';
 import type { TennisDataPort } from '@/services/tennisData/tennisDataPort';
 import type { MatchCentreData, TennisMatch } from '@/types/matches';
@@ -64,12 +66,29 @@ export const httpTennisDataPort: TennisDataPort = {
   async fetchMatchCentre(fixtureId: number): Promise<MatchCentreData | null> {
     const liveMatches = await fetchLiveTennisMatches();
     const liveMatch = liveMatches.find((match) => match.fixtureId === fixtureId);
-    const match =
-      liveMatch ??
-      (await this.fetchOrderOfPlay()).find((fixture) => fixture.fixtureId === fixtureId);
-    if (match === undefined) {
+    if (liveMatch !== undefined) {
+      const detail = await fetchLiveTimeline(liveMatch);
+      return { match: liveMatch, ...detail, stats: [] };
+    }
+    const fixture = (await this.fetchOrderOfPlay()).find(
+      (match) => match.fixtureId === fixtureId,
+    );
+    if (fixture === undefined) {
       return null;
     }
-    return { match, momentum: [], timeline: [], stats: [] };
+    return { match: fixture, momentum: [], timeline: [], stats: [] };
   },
 };
+
+async function fetchLiveTimeline(
+  match: TennisMatch,
+): Promise<{ timeline: MatchCentreData['timeline']; momentum: number[] }> {
+  try {
+    const payload = await fetchFeed<ProviderTimelineResponse>(
+      `feed=timeline&id=${match.fixtureId}`,
+    );
+    return mapProviderTimeline(payload.results, match);
+  } catch {
+    return { timeline: [], momentum: [] };
+  }
+}

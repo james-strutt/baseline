@@ -68,10 +68,20 @@ export interface ProviderPlayerProfile {
   countryAcr: string;
   currentRank: number | null;
   points: number | null;
+  form?: string[] | null;
   country: { name: string } | null;
   information: ProviderPlayerInformation | null;
 }
 
 export interface ProviderPlayerResponse {
   data: ProviderPlayerProfile | null;
+}
+
+export interface ProviderTimelineEntry {
+  id: string;
+  text: string;
+}
+
+export interface ProviderTimelineResponse {
+  results: ProviderTimelineEntry[];
 }
