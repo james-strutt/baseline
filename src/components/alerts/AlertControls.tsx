@@ -33,7 +33,8 @@ export function AlertControls({ playerId }: AlertControlsProps): ReactElement {
           <button
             key={kind}
             type="button"
-            aria-pressed={preferences.kinds[kind]}
+            role="switch"
+            aria-checked={preferences.kinds[kind]}
             onClick={(): void => toggleKind(kind)}
             className="flex w-full cursor-pointer items-baseline justify-between border-b border-ink/10 py-2 font-body text-[15px] transition-colors hover:text-ribbon"
           >
@@ -50,12 +51,13 @@ export function AlertControls({ playerId }: AlertControlsProps): ReactElement {
           <button
             key={channel}
             type="button"
-            aria-pressed={preferences.channels[channel]}
+            role="switch"
+            aria-checked={preferences.channels[channel]}
             onClick={(): void => toggleChannel(channel)}
             className={`cursor-pointer rounded-plaque px-2.5 py-1 font-body text-xs transition-colors ${
               preferences.channels[channel]
                 ? 'bg-ribbon text-chalk'
-                : 'border border-ink/30 text-ink-muted'
+                : 'border border-ink/40 text-ink-muted'
             }`}
           >
             {ALERT_CHANNEL_COPY[channel]} {preferences.channels[channel] ? '✓' : ''}

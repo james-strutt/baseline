@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 export interface MembershipPanelProps {
   onContinue(): void;
@@ -16,8 +17,11 @@ const PLUS_BENEFITS = [
 /*
  * The W11 paywall, shown at the third-favourite moment (plan §9.2). Ribbon
  * purple + gilt is the premium identity, used nowhere else in the free app.
+ * A real focus-trapped dialog: focus enters on open, Escape and the backdrop
+ * dismiss, focus returns to the opener on close.
  */
 export function MembershipPanel({ onContinue, onDismiss }: MembershipPanelProps): ReactElement {
+  const dialogRef = useFocusTrap<HTMLDivElement>(onDismiss);
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-centre-court-deep/70 p-6"
@@ -25,9 +29,11 @@ export function MembershipPanel({ onContinue, onDismiss }: MembershipPanelProps)
       role="presentation"
     >
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label="Baseline Plus membership"
+        aria-describedby="membership-pitch"
         className="w-full max-w-md space-y-5 rounded-plaque border border-gilt bg-canvas p-6"
         onClick={(event): void => event.stopPropagation()}
       >
@@ -36,7 +42,9 @@ export function MembershipPanel({ onContinue, onDismiss }: MembershipPanelProps)
             Membership has its privileges
           </p>
         </div>
-        <p className="font-body text-[15px]">Follow every player you love.</p>
+        <p id="membership-pitch" className="font-body text-[15px]">
+          Two players come with every membership. Plus removes the limit.
+        </p>
         <ul className="space-y-1.5 font-body text-[15px]">
           {PLUS_BENEFITS.map((benefit) => (
             <li key={benefit} className="flex items-baseline gap-2">
@@ -58,7 +66,7 @@ export function MembershipPanel({ onContinue, onDismiss }: MembershipPanelProps)
           onClick={onDismiss}
           className="w-full cursor-pointer pt-1 text-center font-body text-sm text-ink-muted transition-colors hover:text-ribbon"
         >
-          Not now
+          Perhaps later
         </button>
       </div>
     </div>

@@ -50,7 +50,7 @@ export function BriefPage(): ReactElement {
   return (
     <div className="mx-auto max-w-xl space-y-8">
       <header className="space-y-2 border-b border-gilt pb-5 text-center">
-        <h1 className="font-display text-3xl uppercase tracking-[0.45em]">Baseline</h1>
+        <h1 className="font-display text-display-hero">Baseline</h1>
         <p className="font-body text-sm text-ink-muted">
           {formatLocalDate(nowMs, timeZone)} · {zoneAbbreviation}
         </p>
@@ -96,7 +96,7 @@ export function BriefPage(): ReactElement {
         </section>
       ) : null}
       <footer className="border-t border-ink/10 pt-4 text-center font-body text-xs text-ink-muted">
-        Delivered each morning at 7:00am your time, once the notification service is live.
+        Delivered to your inbox each morning at 7:00am, your time.
       </footer>
     </div>
   );

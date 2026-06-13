@@ -128,14 +128,17 @@ describe('match centre', () => {
   it('shows a countdown card, not a plaque, for a match that has not begun', async () => {
     await renderRoute('/matches/1010');
     expect(await screen.findByText(/Next — Djokovic v Lehecka/)).toBeTruthy();
+    /* A scheduled match opens on its richest tab (head-to-head); the empty
+     * point-by-point copy is still reachable from the Points tab. */
+    (await screen.findByRole('tab', { name: 'Points' })).click();
     expect(await screen.findByText(/Point-by-point coverage begins when play does/)).toBeTruthy();
   });
 
-  it('serves stats and the head-to-head record behind the W3 tabs', async () => {
+  it('serves stats and the head-to-head record behind the W3 tablist', async () => {
     await renderRoute('/matches/1001');
-    (await screen.findByRole('button', { name: 'Stats' })).click();
+    (await screen.findByRole('tab', { name: 'Statistics' })).click();
     expect(await screen.findByText('Unforced errors')).toBeTruthy();
-    (await screen.findByRole('button', { name: 'H2H' })).click();
+    (await screen.findByRole('tab', { name: 'Head-to-head' })).click();
     expect(await screen.findByText(/Naples Final/)).toBeTruthy();
   });
 });
@@ -144,10 +147,10 @@ describe('alert controls', () => {
   it('lets a follower tune alerts in their own terms, with set scores off by default', async () => {
     window.localStorage.setItem('baseline.favourite-players', JSON.stringify([7]));
     await renderRoute('/players/7');
-    const everySetToggle = await screen.findByRole('button', { name: /Every set/ });
-    expect(everySetToggle.getAttribute('aria-pressed')).toBe('false');
+    const everySetToggle = await screen.findByRole('switch', { name: /Every set/ });
+    expect(everySetToggle.getAttribute('aria-checked')).toBe('false');
     fireEvent.click(everySetToggle);
-    expect(everySetToggle.getAttribute('aria-pressed')).toBe('true');
+    expect(everySetToggle.getAttribute('aria-checked')).toBe('true');
   });
 });
 

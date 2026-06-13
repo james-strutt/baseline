@@ -1,12 +1,13 @@
 import { Link, useParams } from '@tanstack/react-router';
-import { useState } from 'react';
-import type { ReactElement } from 'react';
+import { useRef, useState } from 'react';
+import type { KeyboardEvent, ReactElement } from 'react';
 import { NextMatchCard } from '@/components/matches/NextMatchCard';
 import { ScorePlaque } from '@/components/scoreboard/ScorePlaque';
 import { useMatchCentre } from '@/hooks/useTennisData';
 import { useUserClock } from '@/hooks/useUserClock';
 import type {
   H2HSummary,
+  MatchCentreData,
   MatchStatLine,
   TennisMatch,
   TimelinePoint,
@@ -17,9 +18,72 @@ type CentreTab = 'points' | 'stats' | 'h2h';
 
 const CENTRE_TABS: ReadonlyArray<{ key: CentreTab; label: string }> = [
   { key: 'points', label: 'Points' },
-  { key: 'stats', label: 'Stats' },
-  { key: 'h2h', label: 'H2H' },
+  { key: 'stats', label: 'Statistics' },
+  { key: 'h2h', label: 'Head-to-head' },
 ];
+
+/* Open the first tab that actually has something to show, so a quiet "begins
+ * when play does" is never the first impression when a richer tab has data. */
+function firstTabWithContent(data: MatchCentreData): CentreTab {
+  if (data.timeline.length > 0) {
+    return 'points';
+  }
+  if (data.stats.length > 0) {
+    return 'stats';
+  }
+  return data.h2h !== undefined ? 'h2h' : 'points';
+}
+
+interface MatchTabsProps {
+  active: CentreTab;
+  onSelect(tab: CentreTab): void;
+}
+
+function MatchTabs({ active, onSelect }: MatchTabsProps): ReactElement {
+  const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number): void => {
+    const lastIndex = CENTRE_TABS.length - 1;
+    const nextIndex =
+      event.key === 'ArrowRight' ? (index === lastIndex ? 0 : index + 1)
+      : event.key === 'ArrowLeft' ? (index === 0 ? lastIndex : index - 1)
+      : event.key === 'Home' ? 0
+      : event.key === 'End' ? lastIndex
+      : -1;
+    if (nextIndex === -1) {
+      return;
+    }
+    event.preventDefault();
+    onSelect(CENTRE_TABS[nextIndex]?.key ?? 'points');
+    tabRefs.current[nextIndex]?.focus();
+  };
+  return (
+    <div role="tablist" aria-label="Match detail" className="flex gap-6 border-b border-ink/15">
+      {CENTRE_TABS.map((centreTab, index) => (
+        <button
+          key={centreTab.key}
+          type="button"
+          role="tab"
+          id={`tab-${centreTab.key}`}
+          aria-controls={`panel-${centreTab.key}`}
+          aria-selected={active === centreTab.key}
+          tabIndex={active === centreTab.key ? 0 : -1}
+          ref={(element): void => {
+            tabRefs.current[index] = element;
+          }}
+          onClick={(): void => onSelect(centreTab.key)}
+          onKeyDown={(event): void => handleKeyDown(event, index)}
+          className={`cursor-pointer pb-2 font-body text-[15px] transition-colors ${
+            active === centreTab.key
+              ? 'border-b-2 border-ribbon text-ribbon'
+              : 'text-ink-muted hover:text-ribbon'
+          }`}
+        >
+          {centreTab.label}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 function MomentumStrip({ momentum }: { momentum: number[] }): ReactElement | null {
   if (momentum.length === 0) {
@@ -143,7 +207,7 @@ export function MatchCentrePage(): ReactElement {
   const { fixtureId } = useParams({ strict: false });
   const { matchCentre, isLoading } = useMatchCentre(Number(fixtureId ?? '0'));
   const { nowMs, timeZone } = useUserClock();
-  const [tab, setTab] = useState<CentreTab>('points');
+  const [selectedTab, setSelectedTab] = useState<CentreTab | null>(null);
 
   if (isLoading) {
     return <div className="club-skeleton h-72" />;
@@ -159,6 +223,7 @@ export function MatchCentrePage(): ReactElement {
     );
   }
   const { match, momentum, timeline, stats, storyline, h2h } = matchCentre;
+  const tab = selectedTab ?? firstTabWithContent(matchCentre);
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <h1 className="sr-only">
@@ -189,26 +254,12 @@ export function MatchCentrePage(): ReactElement {
         </a>
       ) : null}
       <MomentumStrip momentum={momentum} />
-      <nav className="flex gap-6 border-b border-ink/15">
-        {CENTRE_TABS.map((centreTab) => (
-          <button
-            key={centreTab.key}
-            type="button"
-            aria-pressed={tab === centreTab.key}
-            onClick={(): void => setTab(centreTab.key)}
-            className={`cursor-pointer pb-2 font-body text-[15px] transition-colors ${
-              tab === centreTab.key
-                ? 'border-b-2 border-ribbon text-ribbon'
-                : 'text-ink-muted hover:text-ribbon'
-            }`}
-          >
-            {centreTab.label}
-          </button>
-        ))}
-      </nav>
-      {tab === 'points' ? <PointByPointList timeline={timeline} /> : null}
-      {tab === 'stats' ? <StatsTable stats={stats} match={match} /> : null}
-      {tab === 'h2h' ? <H2HPanel h2h={h2h} match={match} /> : null}
+      <MatchTabs active={tab} onSelect={setSelectedTab} />
+      <div role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`} tabIndex={0}>
+        {tab === 'points' ? <PointByPointList timeline={timeline} /> : null}
+        {tab === 'stats' ? <StatsTable stats={stats} match={match} /> : null}
+        {tab === 'h2h' ? <H2HPanel h2h={h2h} match={match} /> : null}
+      </div>
       {storyline !== undefined ? (
         <footer className="border-t border-gilt pt-3 font-body text-[15px] text-ink-muted">
           {storyline}

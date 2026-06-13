@@ -14,12 +14,14 @@ import { resultLine } from '@/utils/score/formatScoreline';
 
 type CourtFilter = 'all' | TourLevel;
 
-const COURT_FILTERS: ReadonlyArray<{ key: CourtFilter; label: string }> = [
-  { key: 'all', label: 'All' },
-  { key: 'atp', label: 'ATP' },
-  { key: 'wta', label: 'WTA' },
-  { key: 'challenger', label: 'CH' },
-  { key: 'itf', label: 'ITF' },
+/* The umpire never abbreviates aloud — the chip shows "CH", screen readers
+ * hear "Challenger". */
+const COURT_FILTERS: ReadonlyArray<{ key: CourtFilter; label: string; spoken: string }> = [
+  { key: 'all', label: 'All', spoken: 'All courts' },
+  { key: 'atp', label: 'ATP', spoken: 'ATP' },
+  { key: 'wta', label: 'WTA', spoken: 'WTA' },
+  { key: 'challenger', label: 'CH', spoken: 'Challenger' },
+  { key: 'itf', label: 'ITF', spoken: 'ITF' },
 ];
 
 /* The hub never opens without the scoreboard: the highest-tier live match
@@ -58,12 +60,18 @@ function MyMatchesSection({
       <section className="space-y-4">
         <h2 className={SECTION_HEADING_CLASS}>On court now</h2>
         <HeroPlaqueCarousel matches={featuredMatches} />
-        <p className="font-body text-[15px] text-ink-muted">
-          Follow the players you love — their matches appear here first.{' '}
-          <Link to="/players" className="text-ribbon underline underline-offset-2">
-            Choose your players
+        <div className="rounded-plaque border border-line p-5">
+          <p className="font-display text-name-sm">Follow the players you love.</p>
+          <p className="mt-1 font-body text-[15px] text-ink-muted">
+            Their matches lead your hub, in your time — wherever they play.
+          </p>
+          <Link
+            to="/players"
+            className="mt-3 inline-block rounded-plaque bg-ribbon px-4 py-2 font-body text-sm text-chalk transition-opacity hover:opacity-90"
+          >
+            Choose your players ›
           </Link>
-        </p>
+        </div>
       </section>
     );
   }
@@ -103,7 +111,7 @@ function AllCourtsSection({ matches, nowMs, lastUpdatedMs }: AllCourtsSectionPro
   const visibleMatches =
     filter === 'all' ? matches : matches.filter((match) => match.tourLevel === filter);
   return (
-    <section className="space-y-4">
+    <section className="space-y-4 lg:border-l lg:border-line lg:pl-8">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h2 className={SECTION_HEADING_CLASS}>All courts ({visibleMatches.length})</h2>
         <div className="flex gap-1.5">
@@ -112,6 +120,7 @@ function AllCourtsSection({ matches, nowMs, lastUpdatedMs }: AllCourtsSectionPro
               key={courtFilter.key}
               type="button"
               aria-pressed={filter === courtFilter.key}
+              aria-label={courtFilter.spoken}
               onClick={(): void => setFilter(courtFilter.key)}
               className={`cursor-pointer rounded-plaque px-2.5 py-1 font-body text-xs transition-colors ${
                 filter === courtFilter.key
@@ -171,12 +180,15 @@ function WhileYouSleptSection({ results }: { results: TennisMatch[] }): ReactEle
 
 function LiveHubSkeleton(): ReactElement {
   return (
-    <div className="grid gap-10 lg:grid-cols-[7fr_5fr]">
+    <div className="grid gap-10 lg:grid-cols-[8fr_4fr] xl:gap-16">
       <div className="space-y-4">
-        <div className="club-skeleton h-56" />
-        <div className="club-skeleton h-24" />
+        <p className="font-body text-eyebrow uppercase tracking-[0.24em] text-ink-muted">
+          Taking the court…
+        </p>
+        <div className="club-skeleton h-56" aria-hidden />
+        <div className="club-skeleton h-24" aria-hidden />
       </div>
-      <div className="club-skeleton h-80" />
+      <div className="club-skeleton h-80" aria-hidden />
     </div>
   );
 }
@@ -221,7 +233,7 @@ export function LiveHubPage(): ReactElement {
     );
   }
   return (
-    <div className="grid grid-cols-1 gap-10 lg:grid-cols-[7fr_5fr] xl:gap-16">
+    <div className="grid grid-cols-1 gap-10 lg:grid-cols-[8fr_4fr] xl:gap-16">
       <h1 className="sr-only">Live tennis scores</h1>
       <div className="space-y-10">
         <MyMatchesSection
