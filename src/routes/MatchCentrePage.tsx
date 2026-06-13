@@ -28,14 +28,14 @@ function MomentumStrip({ momentum }: { momentum: number[] }): ReactElement | nul
   const peak = Math.max(...momentum);
   return (
     <section className="space-y-2">
-      <h2 className="font-display text-[13px] uppercase tracking-[0.22em] text-centre-court/70">
+      <h2 className="font-display text-[13px] uppercase tracking-[0.22em] text-ink-muted">
         Momentum
       </h2>
       <div className="flex h-16 items-end gap-1" aria-label="per-game momentum">
         {momentum.map((value, gameIndex) => (
           <span
             key={gameIndex}
-            className="w-2.5 rounded-t-[2px] bg-centre-court/30"
+            className="w-2.5 rounded-t-[2px] bg-ink/30"
             style={{ height: `${Math.round((value / peak) * 100)}%` }}
           />
         ))}
@@ -47,7 +47,7 @@ function MomentumStrip({ momentum }: { momentum: number[] }): ReactElement | nul
 function PointByPointList({ timeline }: { timeline: TimelinePoint[] }): ReactElement {
   if (timeline.length === 0) {
     return (
-      <p className="font-body text-[15px] text-centre-court/70">
+      <p className="font-body text-[15px] text-ink-muted">
         Point-by-point coverage begins when play does.
       </p>
     );
@@ -57,7 +57,7 @@ function PointByPointList({ timeline }: { timeline: TimelinePoint[] }): ReactEle
       {timeline.map((point, pointIndex) => (
         <p
           key={pointIndex}
-          className="flex gap-4 border-b border-centre-court/10 py-2 font-body text-[15px]"
+          className="flex gap-4 border-b border-ink/10 py-2 font-body text-[15px]"
         >
           <span className="w-10 shrink-0 font-score tabular-nums">{point.games}</span>
           {point.points !== '' ? (
@@ -73,24 +73,24 @@ function PointByPointList({ timeline }: { timeline: TimelinePoint[] }): ReactEle
 function StatsTable({ stats, match }: { stats: MatchStatLine[]; match: TennisMatch }): ReactElement {
   if (stats.length === 0) {
     return (
-      <p className="font-body text-[15px] text-centre-court/70">
+      <p className="font-body text-[15px] text-ink-muted">
         No statistics filed for this court yet.
       </p>
     );
   }
   return (
     <div>
-      <p className="flex justify-between pb-1 font-display text-xs uppercase tracking-[0.12em] text-centre-court/60">
+      <p className="flex justify-between pb-1 font-display text-xs uppercase tracking-[0.12em] text-ink-muted">
         <span>{match.player1.displayName}</span>
         <span>{match.player2.displayName}</span>
       </p>
       {stats.map((line) => (
         <p
           key={line.label}
-          className="flex items-baseline justify-between border-b border-centre-court/10 py-2 font-body text-[15px]"
+          className="flex items-baseline justify-between border-b border-ink/10 py-2 font-body text-[15px]"
         >
           <span className="w-16 shrink-0 font-score tabular-nums">{line.p1}</span>
-          <span className="text-centre-court/60">{line.label}</span>
+          <span className="text-ink-muted">{line.label}</span>
           <span className="w-16 shrink-0 text-right font-score tabular-nums">{line.p2}</span>
         </p>
       ))}
@@ -111,7 +111,7 @@ function h2hHeadline(h2h: H2HSummary, match: TennisMatch): string {
 function H2HPanel({ h2h, match }: { h2h: H2HSummary | undefined; match: TennisMatch }): ReactElement {
   if (h2h === undefined) {
     return (
-      <p className="font-body text-[15px] text-centre-court/70">
+      <p className="font-body text-[15px] text-ink-muted">
         No previous meetings on file — a first acquaintance.
       </p>
     );
@@ -125,11 +125,11 @@ function H2HPanel({ h2h, match }: { h2h: H2HSummary | undefined; match: TennisMa
         {h2h.meetings.map((meeting) => (
           <p
             key={`${meeting.year}-${meeting.eventName}`}
-            className="flex items-baseline gap-3 border-b border-centre-court/10 py-2 font-body text-[15px]"
+            className="flex items-baseline gap-3 border-b border-ink/10 py-2 font-body text-[15px]"
           >
             <span className="w-12 shrink-0 font-score tabular-nums">{meeting.year}</span>
             <span className="min-w-0 truncate">{meeting.eventName}</span>
-            <span className="ml-auto shrink-0 text-centre-court/70">
+            <span className="ml-auto shrink-0 text-ink-muted">
               {meeting.winnerName} · <span className="font-score">{meeting.score}</span>
             </span>
           </p>
@@ -150,7 +150,7 @@ export function MatchCentrePage(): ReactElement {
   }
   if (matchCentre === null) {
     return (
-      <p className="font-body text-[15px] text-centre-court/70">
+      <p className="font-body text-[15px] text-ink-muted">
         No match at this address.{' '}
         <Link to="/" className="text-ribbon underline">
           The live hub has everything in play.
@@ -161,11 +161,14 @@ export function MatchCentrePage(): ReactElement {
   const { match, momentum, timeline, stats, storyline, h2h } = matchCentre;
   return (
     <div className="mx-auto max-w-2xl space-y-6">
+      <h1 className="sr-only">
+        {match.player1.displayName} v {match.player2.displayName} — match centre
+      </h1>
       <header className="flex items-baseline justify-between gap-3">
         <Link to="/" className="font-body text-sm text-ribbon">
           ‹ Back
         </Link>
-        <p className="font-body text-xs uppercase tracking-[0.18em] text-centre-court/70">
+        <p className="font-body text-xs uppercase tracking-[0.18em] text-ink-muted">
           {match.tournamentName}
           {match.roundName !== undefined ? ` · ${match.roundName}` : ''}
         </p>
@@ -186,7 +189,7 @@ export function MatchCentrePage(): ReactElement {
         </a>
       ) : null}
       <MomentumStrip momentum={momentum} />
-      <nav className="flex gap-6 border-b border-centre-court/15">
+      <nav className="flex gap-6 border-b border-ink/15">
         {CENTRE_TABS.map((centreTab) => (
           <button
             key={centreTab.key}
@@ -196,7 +199,7 @@ export function MatchCentrePage(): ReactElement {
             className={`cursor-pointer pb-2 font-body text-[15px] transition-colors ${
               tab === centreTab.key
                 ? 'border-b-2 border-ribbon text-ribbon'
-                : 'text-centre-court/60 hover:text-ribbon'
+                : 'text-ink-muted hover:text-ribbon'
             }`}
           >
             {centreTab.label}
@@ -207,7 +210,7 @@ export function MatchCentrePage(): ReactElement {
       {tab === 'stats' ? <StatsTable stats={stats} match={match} /> : null}
       {tab === 'h2h' ? <H2HPanel h2h={h2h} match={match} /> : null}
       {storyline !== undefined ? (
-        <footer className="border-t border-gilt pt-3 font-body text-[15px] text-centre-court/80">
+        <footer className="border-t border-gilt pt-3 font-body text-[15px] text-ink-muted">
           {storyline}
         </footer>
       ) : null}

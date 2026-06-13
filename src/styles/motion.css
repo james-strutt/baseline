@@ -1,0 +1,119 @@
+/*
+ * The one orchestrated moment (plan §4.2): the manual scoreboard plaque's
+ * split-flap digit flip and the serve dot sliding across. Nothing else in the
+ * app animates. Keyframes live here (not global.css) to keep each file well
+ * under the 500-line ceiling.
+ */
+
+/* — Reduced-motion cross-fade fallback for the flip — */
+@keyframes plaque-fade {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.plaque-fade {
+  animation: plaque-fade 140ms ease-out;
+}
+
+/*
+ * Split-flap digit. The slot shows the digit twice — top and bottom static
+ * halves — with two leaves folding only mid-change: the old top leaf folds
+ * down (0→-90°) revealing the new top, then the new bottom leaf folds in
+ * (90→0°) with a slight mechanical overshoot. ~140ms total. The digit fills
+ * the parent stencil slot so the 50% clip seam lands on the digit mid-line at
+ * every slot size.
+ */
+.flap-slot {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  perspective: 220px;
+}
+
+.flap-slot::after {
+  content: '';
+  position: absolute;
+  inset: calc(50% - 0.5px) 0 auto 0;
+  height: 1px;
+  background: color-mix(in srgb, var(--color-gilt) 30%, transparent);
+  z-index: 4;
+  pointer-events: none;
+}
+
+.flap-static,
+.flap-leaf,
+.flap-plain {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.flap-top {
+  clip-path: inset(0 0 calc(50% - 0.5px) 0);
+  z-index: 1;
+}
+
+.flap-bottom {
+  clip-path: inset(calc(50% - 0.5px) 0 0 0);
+  z-index: 1;
+}
+
+.flap-leaf {
+  backface-visibility: hidden;
+  z-index: 2;
+}
+
+.flap-leaf-top {
+  clip-path: inset(0 0 calc(50% - 0.5px) 0);
+  transform-origin: center bottom;
+  animation: flap-top 70ms cubic-bezier(0.36, 0, 0.66, -0.05) forwards;
+}
+
+.flap-leaf-bottom {
+  clip-path: inset(calc(50% - 0.5px) 0 0 0);
+  transform-origin: center top;
+  animation: flap-bottom 70ms cubic-bezier(0.34, 1.4, 0.64, 1) 70ms both;
+}
+
+@keyframes flap-top {
+  to {
+    transform: rotateX(-90deg);
+  }
+}
+
+@keyframes flap-bottom {
+  from {
+    transform: rotateX(90deg);
+  }
+  to {
+    transform: rotateX(0);
+  }
+}
+
+/*
+ * The serve dot's entire motion budget: a lateral slide between rows on a
+ * serve change. Deliberately slower (200ms) than the flip so the two never
+ * read as one blurred event. The optic colour, still, is the live signal —
+ * never a pulse or glow.
+ */
+.serve-dot {
+  position: absolute;
+  transition: top 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flap-leaf {
+    display: none;
+  }
+  .serve-dot {
+    transition: none;
+  }
+}

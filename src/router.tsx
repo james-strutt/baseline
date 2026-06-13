@@ -8,6 +8,7 @@ import {
 import type { ReactElement } from 'react';
 import { BottomTabBar } from '@/components/layout/BottomTabBar';
 import { Masthead } from '@/components/layout/Masthead';
+import { useScoreAnnouncer } from '@/hooks/useScoreAnnouncer';
 import { BriefPage } from '@/routes/BriefPage';
 import { LiveHubPage } from '@/routes/LiveHubPage';
 import { MatchCentrePage } from '@/routes/MatchCentrePage';
@@ -17,28 +18,39 @@ import { PlayersPage } from '@/routes/PlayersPage';
 import { RankingsPage } from '@/routes/RankingsPage';
 
 function RootLayout(): ReactElement {
+  const scoreAnnouncement = useScoreAnnouncer();
   return (
     <div className="min-h-screen">
+      <a href="#main-content" className="sr-only skip-link font-body text-sm">
+        Skip to scores
+      </a>
       <Masthead />
-      <main className="mx-auto w-full max-w-7xl px-4 py-6 pb-24 sm:px-6 sm:py-8 sm:pb-10 lg:px-10 lg:py-10">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="mx-auto w-full max-w-7xl px-4 py-6 pb-24 outline-none sm:px-6 sm:py-8 sm:pb-10 lg:px-10 lg:py-10"
+      >
         <Outlet />
       </main>
       <BottomTabBar />
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {scoreAnnouncement}
+      </div>
     </div>
   );
 }
 
 function RouteErrorState(): ReactElement {
   return (
-    <p className="mx-auto max-w-5xl px-4 py-6 font-body text-sm text-centre-court/70">
-      Play suspended — this page hit a fault. Refresh to resume.
+    <p className="mx-auto max-w-5xl px-4 py-6 font-body text-sm text-ink-muted">
+      Play suspended — this page could not be loaded. Refresh to resume.
     </p>
   );
 }
 
 function RouteNotFoundState(): ReactElement {
   return (
-    <p className="font-body text-sm text-centre-court/70">
+    <p className="font-body text-sm text-ink-muted">
       Nothing at this address.{' '}
       <Link to="/" className="text-ribbon underline">
         Back to the live hub.

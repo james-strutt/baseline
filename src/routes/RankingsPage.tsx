@@ -36,12 +36,12 @@ function RankingRow({
   return (
     <div
       className={`flex items-baseline gap-3 px-3 py-2.5 sm:gap-4 sm:px-4 ${
-        isOnBoard ? 'text-chalk' : 'border-b border-centre-court/10 text-centre-court'
+        isOnBoard ? 'text-chalk' : 'border-b border-ink/10 text-ink'
       }`}
     >
       <span
         className={`w-7 shrink-0 text-right font-score text-base tabular-nums ${
-          isOnBoard ? 'text-gilt' : 'text-centre-court/60'
+          isOnBoard ? 'text-gilt' : 'text-ink-muted'
         }`}
       >
         {entry.position}
@@ -55,7 +55,7 @@ function RankingRow({
       </Link>
       <span
         className={`hidden font-body text-xs sm:inline ${
-          isOnBoard ? 'text-chalk/60' : 'text-centre-court/50'
+          isOnBoard ? 'text-chalk/60' : 'text-ink-muted'
         }`}
       >
         {entry.countryCode}
@@ -108,7 +108,7 @@ export function RankingsPage(): ReactElement {
               aria-pressed={tour === tourOption}
               onClick={(): void => setTour(tourOption)}
               className={`cursor-pointer rounded-plaque px-3 py-1 font-body text-sm uppercase transition-colors ${
-                tour === tourOption ? 'bg-ribbon text-chalk' : 'text-centre-court/60 hover:text-ribbon'
+                tour === tourOption ? 'bg-ribbon text-chalk' : 'text-ink-muted hover:text-ribbon'
               }`}
             >
               {tourOption}
@@ -123,12 +123,12 @@ export function RankingsPage(): ReactElement {
       />
       {isLoading ? <div className="club-skeleton h-72" /> : null}
       {isError ? (
-        <p className="font-body text-[15px] text-centre-court/70">
+        <p className="font-body text-[15px] text-ink-muted">
           The honours board is being re-engraved — rankings are not loading. Resuming shortly.
         </p>
       ) : null}
       {isSearching && searchedRankings.length === 0 && !isLoading ? (
-        <p className="font-body text-[15px] text-centre-court/70">
+        <p className="font-body text-[15px] text-ink-muted">
           No player by that name on the {tour.toUpperCase()} list. Try the other tour.
         </p>
       ) : null}

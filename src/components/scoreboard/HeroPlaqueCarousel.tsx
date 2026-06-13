@@ -61,7 +61,7 @@ export function HeroPlaqueCarousel({ matches }: HeroPlaqueCarouselProps): ReactE
             type="button"
             aria-label="Previous match"
             onClick={(): void => stepBy(-1)}
-            className="cursor-pointer px-2 font-body text-lg text-centre-court/60 transition-colors hover:text-ribbon"
+            className="cursor-pointer px-2 font-body text-lg text-ink-muted transition-colors hover:text-ribbon"
           >
             ‹
           </button>
@@ -74,7 +74,7 @@ export function HeroPlaqueCarousel({ matches }: HeroPlaqueCarouselProps): ReactE
                 aria-pressed={dotIndex === safeIndex}
                 onClick={(): void => setIndex(dotIndex)}
                 className={`size-2 cursor-pointer rounded-full transition-colors ${
-                  dotIndex === safeIndex ? 'bg-ribbon' : 'bg-centre-court/25 hover:bg-centre-court/50'
+                  dotIndex === safeIndex ? 'bg-ribbon' : 'bg-ink/25 hover:bg-ink/50'
                 }`}
               />
             ))}
@@ -83,7 +83,7 @@ export function HeroPlaqueCarousel({ matches }: HeroPlaqueCarouselProps): ReactE
             type="button"
             aria-label="Next match"
             onClick={(): void => stepBy(1)}
-            className="cursor-pointer px-2 font-body text-lg text-centre-court/60 transition-colors hover:text-ribbon"
+            className="cursor-pointer px-2 font-body text-lg text-ink-muted transition-colors hover:text-ribbon"
           >
             ›
           </button>

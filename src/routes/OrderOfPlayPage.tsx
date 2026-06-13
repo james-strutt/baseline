@@ -23,7 +23,7 @@ function OrderOfPlayRow({ match, timeZone, isFavouriteMatch }: OrderOfPlayRowPro
     <Link
       to="/matches/$fixtureId"
       params={{ fixtureId: String(match.fixtureId) }}
-      className="grid grid-cols-[4.75rem_1fr] items-baseline gap-x-3 border-b border-centre-court/10 px-2 py-3 transition-colors hover:bg-centre-court/5"
+      className="grid grid-cols-[4.75rem_1fr] items-baseline gap-x-3 border-b border-ink/10 px-2 py-3 transition-colors hover:bg-ink/5"
     >
       <span className="font-score text-sm tabular-nums">
         {match.isProvisional ? '~' : ''}
@@ -34,7 +34,7 @@ function OrderOfPlayRow({ match, timeZone, isFavouriteMatch }: OrderOfPlayRowPro
         <span className="min-w-0 truncate">{matchupLabel(match)}</span>
         {isFavouriteMatch ? <span className="shrink-0 text-ribbon">♥</span> : null}
       </span>
-      <span className="col-start-2 mt-0.5 truncate font-body text-xs text-centre-court/60">
+      <span className="col-start-2 mt-0.5 truncate font-body text-xs text-ink-muted">
         {match.tournamentName}
         {match.isProvisional ? ' · not before' : ''}
       </span>
@@ -56,7 +56,7 @@ export function OrderOfPlayPage(): ReactElement {
   }
   if (isError || segments.length === 0) {
     return (
-      <p className="font-body text-sm text-centre-court/70">
+      <p className="font-body text-sm text-ink-muted">
         Quiet, please — no order of play published yet. The next session appears here first.
       </p>
     );
@@ -65,11 +65,11 @@ export function OrderOfPlayPage(): ReactElement {
     <div className="mx-auto max-w-4xl space-y-6">
       <header className="space-y-1">
         <h1 className="font-display text-2xl uppercase tracking-[0.12em]">Order of Play</h1>
-        <p className="font-body text-xs text-centre-court/60">Times shown in your local time</p>
+        <p className="font-body text-xs text-ink-muted">Times shown in your local time</p>
       </header>
       {segments.map((segment) => (
         <section key={`${segment.period}-${segment.matches[0]?.fixtureId ?? segment.label}`}>
-          <h2 className="mb-1 font-display text-sm uppercase tracking-[0.18em] text-centre-court/80">
+          <h2 className="mb-1 font-display text-sm uppercase tracking-[0.18em] text-ink-muted">
             {segment.label}
           </h2>
           {segment.matches.map((match) => (

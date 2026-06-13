@@ -2,8 +2,21 @@
  * The Club token system — plan §4.2. The palette and type scale are defined
  * here and nowhere else; every colour traces to a physical artefact of lawn
  * tennis. Consumed as Tailwind utilities and CSS custom properties.
+ *
+ * Two layers:
+ *   1. BRAND CONSTANTS (@theme) — theme-invariant artefacts. Never recoloured
+ *      per theme. The plaque's greens, gilt edges, ribbon and rationed optic
+ *      are identical in light and dark (the plaque is the shared web/iOS/
+ *      widget/share asset).
+ *   2. SEMANTIC ROLES (:root, overridden in .dark) — canvas/ink/line. Dark
+ *      mode changes only ROLE ASSIGNMENT, never the artefact colours.
  */
+
+/* Enable class-based dark mode in this CSS-first Tailwind v4 setup. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
+  /* — Brand constants (lawn-tennis artefacts) — */
   /* Evening Centre Court grass — plaques, dark canvas, honours boards */
   --color-centre-court: #0e3b27;
   --color-centre-court-deep: #0a2a1c;
@@ -18,10 +31,99 @@
   /* The tennis ball — reserved exclusively for LIVE indicators and the serve dot */
   --color-optic: #cfd916;
 
+  /* — Semantic role aliases → live :root vars (so utilities flip with theme) — */
+  --color-canvas: var(--canvas);
+  --color-canvas-raised: var(--canvas-raised);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  /* — Type — */
   --font-display: 'Libre Caslon Display', 'Georgia', serif;
   --font-body: 'Albert Sans', 'Helvetica Neue', sans-serif;
   --font-score: 'Spline Sans Mono', 'Courier New', monospace;
 
+  /*
+   * Modular scale (~1.25). High-contrast Caslon tightens as it grows
+   * (negative tracking, snug line-height) so names read engraved and
+   * commanding, never as loose body copy. Only the Albert-Sans eyebrow gets
+   * wide positive tracking — poshness whispers, it does not bold.
+   */
+  --text-eyebrow: 0.6875rem;
+  --text-eyebrow--line-height: 1;
+  --text-eyebrow--letter-spacing: 0.24em;
+
+  --text-label: 0.8125rem;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.18em;
+
+  --text-name-sm: 1.125rem;
+  --text-name-sm--line-height: 1.15;
+  --text-name-sm--letter-spacing: 0.01em;
+
+  --text-name: 1.5rem;
+  --text-name--line-height: 1.1;
+  --text-name--letter-spacing: 0;
+
+  --text-name-lg: 2rem;
+  --text-name-lg--line-height: 1.05;
+  --text-name-lg--letter-spacing: -0.01em;
+
+  --text-display-hero: clamp(2.75rem, 6vw, 4rem);
+  --text-display-hero--line-height: 1;
+  --text-display-hero--letter-spacing: -0.015em;
+
+  --text-score-hero: clamp(2.5rem, 7vw, 3.75rem);
+  --text-score-hero--line-height: 1;
+
   /* Crisp plaque edges, not pill shapes */
   --radius-plaque: 4px;
+}
+
+/*
+ * Semantic roles — LIGHT (these values equal today's colours exactly, so the
+ * migration to semantic utilities is a no-visual-change refactor).
+ *
+ * WCAG AA on --canvas (#F7F4EC):
+ *   ink (#0E3B27)        10.4:1  — body & headings (AAA)
+ *   ink-muted (#547362)   4.77:1 — secondary text (AA, the floor)
+ *   ink-faint (#6F8A7C)   3.1:1  — non-text / decorative only
+ *   gilt (#A8893B)        3.0:1  — UI edges / focus ring only (1.4.11), never body text
+ * Never reintroduce opacity-on-green for text: centre-court/50 = 2.81:1,
+ * /40 = 2.22:1 both FAIL AA. Use the named -muted/-faint tiers instead.
+ */
+:root {
+  color-scheme: light;
+  --canvas: var(--color-whites);
+  --canvas-raised: #ffffff;
+  --ink: var(--color-centre-court);
+  --ink-muted: #547362;
+  --ink-faint: #6f8a7c;
+  --line: color-mix(in oklch, var(--color-gilt) 55%, var(--color-whites));
+  --line-strong: var(--color-gilt);
+  /* A full-strength gilt hairline reads as an engraver's edge, not heavy. */
+  --rule-gilt: color-mix(in srgb, var(--color-gilt) 80%, transparent);
+}
+
+/*
+ * Semantic roles — DARK (the evening Centre Court; the 4am native canvas).
+ * Only role assignment changes. Ink is warm ivory (whites), NOT pure chalk —
+ * chalk #FFF stays reserved for scoreboard digits.
+ *
+ * WCAG AA on --canvas (#0A2A1C):
+ *   ink (#F7F4EC)        15.8:1  — body & headings (AAA)
+ *   ink-muted (#AFC2B8)   8.0:1  — secondary text (AA)
+ *   gilt (#A8893B)        4.6:1  — UI edges / focus ring
+ */
+.dark {
+  color-scheme: dark;
+  --canvas: var(--color-centre-court-deep);
+  --canvas-raised: var(--color-centre-court);
+  --ink: var(--color-whites);
+  --ink-muted: #afc2b8;
+  --ink-faint: #7e978a;
+  --line: color-mix(in oklch, var(--color-gilt) 70%, var(--color-centre-court-deep));
+  --line-strong: var(--color-gilt);
 }

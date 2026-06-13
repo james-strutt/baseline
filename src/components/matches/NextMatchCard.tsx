@@ -12,7 +12,7 @@ export interface NextMatchCardProps {
 
 export function NextMatchCard({ match, nowMs, timeZone }: NextMatchCardProps): ReactElement {
   return (
-    <article className="rounded-plaque border border-centre-court/20 bg-whites p-5">
+    <article className="rounded-plaque border border-ink/20 bg-canvas p-5">
       <h3 className="font-display text-lg uppercase tracking-[0.08em]">
         Next — {matchupLabel(match)}
       </h3>
@@ -27,7 +27,7 @@ export function NextMatchCard({ match, nowMs, timeZone }: NextMatchCardProps): R
           isProvisional={match.isProvisional}
         />
       </p>
-      <p className="mt-1 font-body text-xs text-centre-court/60">
+      <p className="mt-1 font-body text-xs text-ink-muted">
         {match.tournamentName}
         {match.roundName !== undefined ? ` · ${match.roundName}` : ''}
       </p>

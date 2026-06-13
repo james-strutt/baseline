@@ -30,7 +30,7 @@ export function PlayerSearchInput({
       onChange={(event): void => setQuery(event.target.value)}
       placeholder={placeholder}
       aria-label={ariaLabel}
-      className="w-full border-b border-centre-court/30 bg-transparent py-2 font-body text-[15px] outline-none transition-colors placeholder:text-centre-court/40 focus:border-ribbon"
+      className="w-full border-b border-ink/30 bg-transparent py-2 font-body text-[15px] outline-none transition-colors placeholder:text-ink-muted focus:border-ribbon"
     />
   );
 }

@@ -34,7 +34,7 @@ const TOUR_PRIORITY: Record<TourLevel, number> = {
 };
 
 const SECTION_HEADING_CLASS =
-  'font-display text-[13px] uppercase tracking-[0.22em] text-centre-court/70';
+  'font-display text-[13px] uppercase tracking-[0.22em] text-ink-muted';
 
 interface MyMatchesSectionProps {
   favouriteLiveMatches: TennisMatch[];
@@ -58,7 +58,7 @@ function MyMatchesSection({
       <section className="space-y-4">
         <h2 className={SECTION_HEADING_CLASS}>On court now</h2>
         <HeroPlaqueCarousel matches={featuredMatches} />
-        <p className="font-body text-[15px] text-centre-court/70">
+        <p className="font-body text-[15px] text-ink-muted">
           Follow the players you love — their matches appear here first.{' '}
           <Link to="/players" className="text-ribbon underline underline-offset-2">
             Choose your players
@@ -77,7 +77,7 @@ function MyMatchesSection({
         <NextMatchCard match={nextFavouriteMatch} nowMs={nowMs} timeZone={timeZone} />
       ) : null}
       {favouriteLiveMatches.length === 0 && nextFavouriteMatch === undefined ? (
-        <p className="font-body text-[15px] text-centre-court/70">
+        <p className="font-body text-[15px] text-ink-muted">
           None of your players are on court. The Order of Play has what is next.
         </p>
       ) : null}
@@ -116,7 +116,7 @@ function AllCourtsSection({ matches, nowMs, lastUpdatedMs }: AllCourtsSectionPro
               className={`cursor-pointer rounded-plaque px-2.5 py-1 font-body text-xs transition-colors ${
                 filter === courtFilter.key
                   ? 'bg-ribbon text-chalk'
-                  : 'text-centre-court/60 hover:text-ribbon'
+                  : 'text-ink-muted hover:text-ribbon'
               }`}
             >
               {courtFilter.label}
@@ -125,16 +125,16 @@ function AllCourtsSection({ matches, nowMs, lastUpdatedMs }: AllCourtsSectionPro
         </div>
       </div>
       {visibleMatches.length === 0 ? (
-        <p className="font-body text-[15px] text-centre-court/70">
+        <p className="font-body text-[15px] text-ink-muted">
           Quiet, please — no matches in play. The Order of Play has the next session.
         </p>
       ) : (
-        <div className="border-t border-centre-court/10">
+        <div className="border-t border-ink/10">
           {visibleMatches.map((match) => (
             <CompactScoreRow key={match.fixtureId} match={match} />
           ))}
           {lastUpdatedMs > 0 ? (
-            <p className="px-2 pt-3 font-body text-xs text-centre-court/50">
+            <p className="px-2 pt-3 font-body text-xs text-ink-muted">
               {updatedAgoLabel(nowMs, lastUpdatedMs)}
             </p>
           ) : null}
@@ -154,7 +154,7 @@ function WhileYouSleptSection({ results }: { results: TennisMatch[] }): ReactEle
       {results.map((match) => (
         <p key={match.fixtureId} className="font-body text-[15px]">
           {resultLine(match)}
-          <span className="text-centre-court/60"> · {match.tournamentName} · </span>
+          <span className="text-ink-muted"> · {match.tournamentName} · </span>
           <a
             href={youtubeHighlightsSearchUrl(match)}
             target="_blank"
@@ -215,13 +215,14 @@ export function LiveHubPage(): ReactElement {
   }
   if (isError) {
     return (
-      <p className="font-body text-[15px] text-centre-court/70">
+      <p className="font-body text-[15px] text-ink-muted">
         Play suspended — live scores are not updating. Resuming shortly.
       </p>
     );
   }
   return (
     <div className="grid grid-cols-1 gap-10 lg:grid-cols-[7fr_5fr] xl:gap-16">
+      <h1 className="sr-only">Live tennis scores</h1>
       <div className="space-y-10">
         <MyMatchesSection
           favouriteLiveMatches={favouriteLiveMatches}

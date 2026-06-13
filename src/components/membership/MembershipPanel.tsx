@@ -28,7 +28,7 @@ export function MembershipPanel({ onContinue, onDismiss }: MembershipPanelProps)
         role="dialog"
         aria-modal="true"
         aria-label="Baseline Plus membership"
-        className="w-full max-w-md space-y-5 rounded-plaque border border-gilt bg-whites p-6"
+        className="w-full max-w-md space-y-5 rounded-plaque border border-gilt bg-canvas p-6"
         onClick={(event): void => event.stopPropagation()}
       >
         <div className="rounded-plaque border border-gilt bg-centre-court p-5">
@@ -52,11 +52,11 @@ export function MembershipPanel({ onContinue, onDismiss }: MembershipPanelProps)
         >
           A$54.99/year — two months free
         </button>
-        <p className="text-center font-body text-sm text-centre-court/60">or A$6.99 monthly</p>
+        <p className="text-center font-body text-sm text-ink-muted">or A$6.99 monthly</p>
         <button
           type="button"
           onClick={onDismiss}
-          className="w-full cursor-pointer pt-1 text-center font-body text-sm text-centre-court/60 transition-colors hover:text-ribbon"
+          className="w-full cursor-pointer pt-1 text-center font-body text-sm text-ink-muted transition-colors hover:text-ribbon"
         >
           Not now
         </button>

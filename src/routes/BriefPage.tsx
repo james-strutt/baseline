@@ -11,7 +11,7 @@ import { matchupLabel } from '@/utils/score/formatScoreline';
 import { formatLocalDate } from '@/utils/time';
 
 const BRIEF_HEADING_CLASS =
-  'font-display text-[13px] uppercase tracking-[0.22em] text-centre-court/70';
+  'font-display text-[13px] uppercase tracking-[0.22em] text-ink-muted';
 
 function TodayRow({
   match,
@@ -23,7 +23,7 @@ function TodayRow({
   isFavouriteMatch: boolean;
 }): ReactElement {
   return (
-    <p className="flex items-baseline gap-3 border-b border-centre-court/10 py-2 font-body text-[15px]">
+    <p className="flex items-baseline gap-3 border-b border-ink/10 py-2 font-body text-[15px]">
       <TimePill utcIso={match.scheduledUtc} timeZone={timeZone} isProvisional={match.isProvisional} />
       <span className="min-w-0 truncate">{matchupLabel(match)}</span>
       {isFavouriteMatch ? <span className="text-ribbon">♥</span> : null}
@@ -51,14 +51,14 @@ export function BriefPage(): ReactElement {
     <div className="mx-auto max-w-xl space-y-8">
       <header className="space-y-2 border-b border-gilt pb-5 text-center">
         <h1 className="font-display text-3xl uppercase tracking-[0.45em]">Baseline</h1>
-        <p className="font-body text-sm text-centre-court/60">
+        <p className="font-body text-sm text-ink-muted">
           {formatLocalDate(nowMs, timeZone)} · {zoneAbbreviation}
         </p>
       </header>
       <section className="space-y-3">
         <h2 className={BRIEF_HEADING_CLASS}>While you slept</h2>
         {results.length === 0 ? (
-          <p className="font-body text-[15px] text-centre-court/70">
+          <p className="font-body text-[15px] text-ink-muted">
             No overnight results filed — play resumes today.
           </p>
         ) : null}
@@ -95,7 +95,7 @@ export function BriefPage(): ReactElement {
           <p className="font-body text-[15px]">{matchCentre.storyline}</p>
         </section>
       ) : null}
-      <footer className="border-t border-centre-court/10 pt-4 text-center font-body text-xs text-centre-court/50">
+      <footer className="border-t border-ink/10 pt-4 text-center font-body text-xs text-ink-muted">
         Delivered each morning at 7:00am your time, once the notification service is live.
       </footer>
     </div>

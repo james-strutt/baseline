@@ -3,7 +3,7 @@ import type { ReactElement } from 'react';
 
 const TAB_BASE_CLASS =
   'flex h-13 flex-1 items-center justify-center px-1 text-center font-body text-[11px] uppercase leading-[1.2] tracking-[0.08em]';
-const TAB_CLASS = `${TAB_BASE_CLASS} text-centre-court/60`;
+const TAB_CLASS = `${TAB_BASE_CLASS} text-ink-muted`;
 const ACTIVE_TAB_PROPS = { className: `${TAB_BASE_CLASS} text-ribbon` };
 
 const TAB_ITEMS: ReadonlyArray<{ to: string; label: string }> = [
@@ -22,7 +22,7 @@ const TAB_ITEMS: ReadonlyArray<{ to: string; label: string }> = [
 export function BottomTabBar(): ReactElement {
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-gilt bg-whites pb-[env(safe-area-inset-bottom)] sm:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-gilt bg-canvas pb-[env(safe-area-inset-bottom)] sm:hidden"
       aria-label="primary"
     >
       <div className="flex">

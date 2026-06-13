@@ -24,8 +24,8 @@ export interface AlertControlsProps {
 export function AlertControls({ playerId }: AlertControlsProps): ReactElement {
   const { preferences, toggleKind, toggleChannel } = useAlertPreferences(playerId);
   return (
-    <section className="space-y-3 rounded-plaque border border-centre-court/20 p-5">
-      <h2 className="font-display text-[13px] uppercase tracking-[0.22em] text-centre-court/70">
+    <section className="space-y-3 rounded-plaque border border-ink/20 p-5">
+      <h2 className="font-display text-[13px] uppercase tracking-[0.22em] text-ink-muted">
         Alerts
       </h2>
       <div>
@@ -35,17 +35,17 @@ export function AlertControls({ playerId }: AlertControlsProps): ReactElement {
             type="button"
             aria-pressed={preferences.kinds[kind]}
             onClick={(): void => toggleKind(kind)}
-            className="flex w-full cursor-pointer items-baseline justify-between border-b border-centre-court/10 py-2 font-body text-[15px] transition-colors hover:text-ribbon"
+            className="flex w-full cursor-pointer items-baseline justify-between border-b border-ink/10 py-2 font-body text-[15px] transition-colors hover:text-ribbon"
           >
             {ALERT_KIND_COPY[kind]}
-            <span aria-hidden className={preferences.kinds[kind] ? 'text-ribbon' : 'text-centre-court/40'}>
+            <span aria-hidden className={preferences.kinds[kind] ? 'text-ribbon' : 'text-ink-muted'}>
               {preferences.kinds[kind] ? '◉' : '○'}
             </span>
           </button>
         ))}
       </div>
       <div className="flex items-center gap-2 pt-1">
-        <span className="font-body text-sm text-centre-court/60">Channel</span>
+        <span className="font-body text-sm text-ink-muted">Channel</span>
         {ALERT_CHANNELS.map((channel) => (
           <button
             key={channel}
@@ -55,14 +55,14 @@ export function AlertControls({ playerId }: AlertControlsProps): ReactElement {
             className={`cursor-pointer rounded-plaque px-2.5 py-1 font-body text-xs transition-colors ${
               preferences.channels[channel]
                 ? 'bg-ribbon text-chalk'
-                : 'border border-centre-court/30 text-centre-court/60'
+                : 'border border-ink/30 text-ink-muted'
             }`}
           >
             {ALERT_CHANNEL_COPY[channel]} {preferences.channels[channel] ? '✓' : ''}
           </button>
         ))}
       </div>
-      <p className="font-body text-xs text-centre-court/60">
+      <p className="font-body text-xs text-ink-muted">
         Quiet hours 11pm — 7am. Suppressed alerts join your Wake-up Brief at 7:00am.
       </p>
     </section>

@@ -17,7 +17,7 @@ function FormStrip({ form }: { form: FormResult[] }): ReactElement {
         <span
           key={matchIndex}
           className={`inline-flex size-5 items-center justify-center rounded-plaque font-score text-xs ${
-            result === 'W' ? 'bg-centre-court text-chalk' : 'bg-centre-court/15 text-centre-court/60'
+            result === 'W' ? 'bg-centre-court text-chalk' : 'bg-ink/15 text-ink-muted'
           }`}
         >
           {result}
@@ -83,7 +83,7 @@ export function PlayerPage(): ReactElement {
   }
   if (profile === null) {
     return (
-      <p className="font-body text-sm text-centre-court/70">
+      <p className="font-body text-sm text-ink-muted">
         We do not have this player&apos;s file yet.{' '}
         <Link to="/rankings" className="text-ribbon underline">
           Back to the rankings.
@@ -104,8 +104,8 @@ export function PlayerPage(): ReactElement {
       <div className="space-y-6">
         <header className="space-y-1">
           <h1 className="font-display text-3xl uppercase tracking-[0.06em]">{profile.fullName}</h1>
-          <p className="font-body text-sm text-centre-court/70">{profileCareerLine(profile)}</p>
-          <p className="font-body text-sm text-centre-court/70">{profileStyleLine(profile)}</p>
+          <p className="font-body text-sm text-ink-muted">{profileCareerLine(profile)}</p>
+          <p className="font-body text-sm text-ink-muted">{profileStyleLine(profile)}</p>
         </header>
         <button
           type="button"
@@ -117,7 +117,7 @@ export function PlayerPage(): ReactElement {
         </button>
         {profile.formLastTen.length > 0 ? (
           <section className="space-y-2">
-            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-centre-court/80">
+            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-ink-muted">
               Form
             </h2>
             <FormStrip form={profile.formLastTen} />
@@ -126,7 +126,7 @@ export function PlayerPage(): ReactElement {
         <HonoursPanel profile={profile} />
         {hasSurfaceRates(profile.surfaceWinRates) ? (
           <section className="space-y-1">
-            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-centre-court/80">
+            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-ink-muted">
               Surfaces
             </h2>
             <p className="font-body text-sm">{surfaceSummaryLine(profile.surfaceWinRates)}</p>
@@ -134,13 +134,13 @@ export function PlayerPage(): ReactElement {
         ) : null}
       </div>
       <div className="space-y-3">
-        <h2 className="font-display text-sm uppercase tracking-[0.18em] text-centre-court/80">
+        <h2 className="font-display text-sm uppercase tracking-[0.18em] text-ink-muted">
           Next match
         </h2>
         {nextMatch !== undefined ? (
           <NextMatchCard match={nextMatch} nowMs={nowMs} timeZone={timeZone} />
         ) : (
-          <p className="font-body text-sm text-centre-court/70">
+          <p className="font-body text-sm text-ink-muted">
             No match scheduled — the order of play updates each evening.
           </p>
         )}

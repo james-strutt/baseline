@@ -51,8 +51,8 @@ interface PlayerListRowProps {
 
 function PlayerListRow({ entry, isFavourite, onToggleFavourite }: PlayerListRowProps): ReactElement {
   return (
-    <div className="flex items-baseline gap-3 border-b border-centre-court/10 px-2 py-2.5">
-      <span className="w-7 shrink-0 text-right font-score text-sm tabular-nums text-centre-court/60">
+    <div className="flex items-baseline gap-3 border-b border-ink/10 px-2 py-2.5">
+      <span className="w-7 shrink-0 text-right font-score text-sm tabular-nums text-ink-muted">
         {entry.position}
       </span>
       <Link
@@ -62,8 +62,8 @@ function PlayerListRow({ entry, isFavourite, onToggleFavourite }: PlayerListRowP
       >
         {entry.playerName}
       </Link>
-      <span className="font-body text-xs text-centre-court/50">{entry.countryCode}</span>
-      <span className="font-body text-xs uppercase text-centre-court/40">{entry.tour}</span>
+      <span className="font-body text-xs text-ink-muted">{entry.countryCode}</span>
+      <span className="font-body text-xs uppercase text-ink-muted">{entry.tour}</span>
       <span className="ml-auto">
         <FavouriteToggleButton
           playerId={entry.playerId}
@@ -106,7 +106,7 @@ export function PlayersPage(): ReactElement {
     <div className="mx-auto max-w-3xl space-y-6">
       <header className="space-y-1">
         <h1 className="font-display text-2xl uppercase tracking-[0.12em]">Players</h1>
-        <p className="font-body text-[15px] text-centre-court/70">
+        <p className="font-body text-[15px] text-ink-muted">
           Follow the players you love.
         </p>
       </header>
@@ -117,7 +117,7 @@ export function PlayersPage(): ReactElement {
       />
       {trimmedQuery === '' ? (
         <section className="space-y-3">
-          <h2 className="font-display text-[13px] uppercase tracking-[0.22em] text-centre-court/70">
+          <h2 className="font-display text-[13px] uppercase tracking-[0.22em] text-ink-muted">
             From the top ten
           </h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -130,14 +130,14 @@ export function PlayersPage(): ReactElement {
               />
             ))}
           </div>
-          <p className="font-body text-xs text-centre-court/50">
+          <p className="font-body text-xs text-ink-muted">
             Tap a tile to follow. Open any profile from the list below or the Rankings.
           </p>
         </section>
       ) : null}
       <section>
         {searchResults.length === 0 ? (
-          <p className="font-body text-[15px] text-centre-court/70">
+          <p className="font-body text-[15px] text-ink-muted">
             No player by that name on the rankings lists yet.
           </p>
         ) : (
