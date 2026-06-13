@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { useMemo, useState } from 'react';
 import type { ReactElement } from 'react';
+import { SectionLabel } from '@/components/layout/SectionLabel';
 import { NextMatchCard } from '@/components/matches/NextMatchCard';
 import { CompactScoreRow } from '@/components/scoreboard/CompactScoreRow';
 import { HeroPlaqueCarousel } from '@/components/scoreboard/HeroPlaqueCarousel';
@@ -35,9 +36,6 @@ const TOUR_PRIORITY: Record<TourLevel, number> = {
   utr: 3,
 };
 
-const SECTION_HEADING_CLASS =
-  'font-display text-[13px] uppercase tracking-[0.22em] text-ink-muted';
-
 interface MyMatchesSectionProps {
   favouriteLiveMatches: TennisMatch[];
   nextFavouriteMatch: TennisMatch | undefined;
@@ -58,7 +56,7 @@ function MyMatchesSection({
   if (!hasFavourites) {
     return (
       <section className="space-y-4">
-        <h2 className={SECTION_HEADING_CLASS}>On court now</h2>
+        <SectionLabel>On court now</SectionLabel>
         <HeroPlaqueCarousel matches={featuredMatches} />
         <div className="rounded-plaque border border-line p-5">
           <p className="font-display text-name-sm">Follow the players you love.</p>
@@ -77,7 +75,7 @@ function MyMatchesSection({
   }
   return (
     <section className="space-y-4">
-      <h2 className={SECTION_HEADING_CLASS}>My matches</h2>
+      <SectionLabel>My matches</SectionLabel>
       {favouriteLiveMatches.length > 0 ? (
         <HeroPlaqueCarousel matches={favouriteLiveMatches} />
       ) : null}
@@ -113,7 +111,7 @@ function AllCourtsSection({ matches, nowMs, lastUpdatedMs }: AllCourtsSectionPro
   return (
     <section className="space-y-4 lg:border-l lg:border-line lg:pl-8">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h2 className={SECTION_HEADING_CLASS}>All courts ({visibleMatches.length})</h2>
+        <SectionLabel>All courts ({visibleMatches.length})</SectionLabel>
         <div className="flex gap-1.5">
           {COURT_FILTERS.map((courtFilter) => (
             <button
@@ -159,7 +157,7 @@ function WhileYouSleptSection({ results }: { results: TennisMatch[] }): ReactEle
   }
   return (
     <section className="space-y-2.5">
-      <h2 className={SECTION_HEADING_CLASS}>While you slept ({results.length})</h2>
+      <SectionLabel>While you slept ({results.length})</SectionLabel>
       {results.map((match) => (
         <p key={match.fixtureId} className="font-body text-[15px]">
           {resultLine(match)}
@@ -183,7 +181,7 @@ function LiveHubSkeleton(): ReactElement {
     <div className="grid gap-10 lg:grid-cols-[8fr_4fr] xl:gap-16">
       <div className="space-y-4">
         <p className="font-body text-eyebrow uppercase tracking-[0.24em] text-ink-muted">
-          Taking the court…
+          Reading the scoreboard…
         </p>
         <div className="club-skeleton h-56" aria-hidden />
         <div className="club-skeleton h-24" aria-hidden />

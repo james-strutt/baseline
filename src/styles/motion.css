@@ -1,8 +1,12 @@
 /*
- * The one orchestrated moment (plan §4.2): the manual scoreboard plaque's
- * split-flap digit flip and the serve dot sliding across. Nothing else in the
- * app animates. Keyframes live here (not global.css) to keep each file well
- * under the 500-line ceiling.
+ * The one orchestrated CONTENT motion (plan §4.2): the manual scoreboard
+ * plaque's split-flap digit flip and the serve dot sliding across. No live
+ * datum changes any other way. Restrained interface feedback — hover/selected
+ * colour fades, the favourite-fill reveal, and the muted-green loading shimmer
+ * — is the plan's sanctioned "restrained fades" register (§4.2) and is kept
+ * deliberately quiet and reduced-motion-aware; it is distinct from, and never
+ * competes with, the scoreboard. Keyframes live here (not global.css) to keep
+ * each file well under the 500-line ceiling.
  */
 
 /* — Reduced-motion cross-fade fallback for the flip — */

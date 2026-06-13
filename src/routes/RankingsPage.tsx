@@ -49,7 +49,9 @@ function RankingRow({
       <Link
         to="/players/$playerId"
         params={{ playerId: String(entry.playerId) }}
-        className="min-w-0 truncate font-display text-base uppercase tracking-[0.08em] transition-opacity hover:opacity-70"
+        className={`min-w-0 truncate font-display text-base transition-opacity hover:opacity-70 ${
+          isOnBoard ? 'uppercase tracking-[0.16em]' : 'tracking-[0.01em]'
+        }`}
       >
         {entry.playerName}
       </Link>
@@ -99,7 +101,7 @@ export function RankingsPage(): ReactElement {
   return (
     <div className="mx-auto max-w-3xl space-y-5">
       <header className="flex flex-wrap items-baseline justify-between gap-4">
-        <h1 className="font-display text-2xl uppercase tracking-[0.12em]">Rankings</h1>
+        <h1 className="font-display text-name">Rankings</h1>
         <div className="flex gap-1.5">
           {(['atp', 'wta'] as const).map((tourOption) => (
             <button

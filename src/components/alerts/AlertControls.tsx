@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+import { SectionLabel } from '@/components/layout/SectionLabel';
 import { useAlertPreferences } from '@/hooks/useAlertPreferences';
 import { ALERT_CHANNELS, ALERT_KINDS } from '@/services/favourites/alertPrefsStore';
 import type { AlertChannel, AlertKind } from '@/types/alerts';
@@ -25,9 +26,7 @@ export function AlertControls({ playerId }: AlertControlsProps): ReactElement {
   const { preferences, toggleKind, toggleChannel } = useAlertPreferences(playerId);
   return (
     <section className="space-y-3 rounded-plaque border border-ink/20 p-5">
-      <h2 className="font-display text-[13px] uppercase tracking-[0.22em] text-ink-muted">
-        Alerts
-      </h2>
+      <SectionLabel>Alerts</SectionLabel>
       <div>
         {ALERT_KINDS.map((kind) => (
           <button

@@ -78,7 +78,7 @@ describe('rankings', () => {
     await renderRoute('/rankings');
     const followButton = await screen.findByRole('button', { name: 'Follow Novak Djokovic' });
     followButton.click();
-    expect(await screen.findByText(/Membership has its privileges/i)).toBeTruthy();
+    expect(await screen.findByText(/The members' enclosure has room for more/i)).toBeTruthy();
     (await screen.findByRole('button', { name: /A\$54\.99\/year/ })).click();
     expect(await screen.findByRole('button', { name: 'Unfollow Novak Djokovic' })).toBeTruthy();
   });

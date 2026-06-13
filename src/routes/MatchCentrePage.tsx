@@ -1,6 +1,7 @@
 import { Link, useParams } from '@tanstack/react-router';
 import { useRef, useState } from 'react';
 import type { KeyboardEvent, ReactElement } from 'react';
+import { SectionLabel } from '@/components/layout/SectionLabel';
 import { NextMatchCard } from '@/components/matches/NextMatchCard';
 import { ScorePlaque } from '@/components/scoreboard/ScorePlaque';
 import { useMatchCentre } from '@/hooks/useTennisData';
@@ -92,9 +93,7 @@ function MomentumStrip({ momentum }: { momentum: number[] }): ReactElement | nul
   const peak = Math.max(...momentum);
   return (
     <section className="space-y-2">
-      <h2 className="font-display text-[13px] uppercase tracking-[0.22em] text-ink-muted">
-        Momentum
-      </h2>
+      <SectionLabel>Momentum</SectionLabel>
       <div className="flex h-16 items-end gap-1" aria-label="per-game momentum">
         {momentum.map((value, gameIndex) => (
           <span
@@ -144,7 +143,7 @@ function StatsTable({ stats, match }: { stats: MatchStatLine[]; match: TennisMat
   }
   return (
     <div>
-      <p className="flex justify-between pb-1 font-display text-xs uppercase tracking-[0.12em] text-ink-muted">
+      <p className="flex justify-between pb-1 font-display text-sm text-ink-muted">
         <span>{match.player1.displayName}</span>
         <span>{match.player2.displayName}</span>
       </p>
@@ -182,9 +181,7 @@ function H2HPanel({ h2h, match }: { h2h: H2HSummary | undefined; match: TennisMa
   }
   return (
     <div className="space-y-3">
-      <p className="font-display text-base uppercase tracking-[0.08em]">
-        {h2hHeadline(h2h, match)}
-      </p>
+      <p className="font-display text-name-sm">{h2hHeadline(h2h, match)}</p>
       <div>
         {h2h.meetings.map((meeting) => (
           <p

@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import type { ReactElement } from 'react';
+import { createPortal } from 'react-dom';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 export interface MembershipPanelProps {
@@ -22,7 +24,16 @@ const PLUS_BENEFITS = [
  */
 export function MembershipPanel({ onContinue, onDismiss }: MembershipPanelProps): ReactElement {
   const dialogRef = useFocusTrap<HTMLDivElement>(onDismiss);
-  return (
+
+  /* Remove the rest of the app from the accessibility tree and tab order
+   * while the dialog is open (aria-modal alone does not do this). */
+  useEffect(() => {
+    const shell = document.getElementById('app-shell');
+    shell?.setAttribute('inert', '');
+    return (): void => shell?.removeAttribute('inert');
+  }, []);
+
+  return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-centre-court-deep/70 p-6"
       onClick={onDismiss}
@@ -34,12 +45,13 @@ export function MembershipPanel({ onContinue, onDismiss }: MembershipPanelProps)
         aria-modal="true"
         aria-label="Baseline Plus membership"
         aria-describedby="membership-pitch"
-        className="w-full max-w-md space-y-5 rounded-plaque border border-gilt bg-canvas p-6"
+        tabIndex={-1}
+        className="w-full max-w-md space-y-5 rounded-plaque border border-gilt bg-canvas p-6 outline-none"
         onClick={(event): void => event.stopPropagation()}
       >
         <div className="rounded-plaque border border-gilt bg-centre-court p-5">
           <p className="font-display text-lg uppercase tracking-[0.18em] text-gilt">
-            Membership has its privileges
+            The members&apos; enclosure has room for more
           </p>
         </div>
         <p id="membership-pitch" className="font-body text-[15px]">
@@ -69,6 +81,7 @@ export function MembershipPanel({ onContinue, onDismiss }: MembershipPanelProps)
           Perhaps later
         </button>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

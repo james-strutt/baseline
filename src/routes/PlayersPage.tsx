@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router';
 import { useMemo, useState } from 'react';
 import type { ReactElement } from 'react';
 import { FavouriteToggleButton } from '@/components/favourites/FavouriteToggleButton';
+import { SectionLabel } from '@/components/layout/SectionLabel';
 import { MembershipPanel } from '@/components/membership/MembershipPanel';
 import { PlayerSearchInput } from '@/components/search/PlayerSearchInput';
 import { useFavourites } from '@/hooks/useFavourites';
@@ -32,9 +33,7 @@ function PlayerTile({ entry, isFavourite, onToggleFavourite }: PlayerTileProps):
         isFavourite ? 'border-2 border-gilt' : 'border border-centre-court/40'
       }`}
     >
-      <span className="block truncate font-display text-lg uppercase tracking-[0.08em] text-chalk">
-        {surname}
-      </span>
+      <span className="block truncate font-display text-name-sm text-chalk">{surname}</span>
       <span className="mt-1 flex items-baseline justify-between font-body text-xs text-chalk/70">
         {entry.countryCode}
         <span>{isFavourite ? '♥' : '♡'}</span>
@@ -90,6 +89,8 @@ export function PlayersPage(): ReactElement {
     ],
     [atp.rankings, wta.rankings],
   );
+  const isLoading = atp.isLoading || wta.isLoading;
+  const isError = atp.isError || wta.isError;
   const trimmedQuery = searchQuery.trim().toLowerCase();
   const searchResults = allPlayers.filter((entry) =>
     entry.playerName.toLowerCase().includes(trimmedQuery),
@@ -105,7 +106,7 @@ export function PlayersPage(): ReactElement {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <header className="space-y-1">
-        <h1 className="font-display text-2xl uppercase tracking-[0.12em]">Players</h1>
+        <h1 className="font-display text-name">Players</h1>
         <p className="font-body text-[15px] text-ink-muted">
           Follow the players you love.
         </p>
@@ -115,11 +116,15 @@ export function PlayersPage(): ReactElement {
         ariaLabel="Search players by name"
         onSearch={setSearchQuery}
       />
-      {trimmedQuery === '' ? (
+      {isLoading ? <div className="club-skeleton h-72" aria-hidden /> : null}
+      {isError ? (
+        <p className="font-body text-[15px] text-ink-muted">
+          The members&apos; list is being checked — players are not loading. Resuming shortly.
+        </p>
+      ) : null}
+      {!isLoading && !isError && trimmedQuery === '' ? (
         <section className="space-y-3">
-          <h2 className="font-display text-[13px] uppercase tracking-[0.22em] text-ink-muted">
-            From the top ten
-          </h2>
+          <SectionLabel>From the top ten</SectionLabel>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {topTiles.map((entry) => (
               <PlayerTile
@@ -136,11 +141,12 @@ export function PlayersPage(): ReactElement {
         </section>
       ) : null}
       <section>
-        {searchResults.length === 0 ? (
+        {!isLoading && !isError && trimmedQuery !== '' && searchResults.length === 0 ? (
           <p className="font-body text-[15px] text-ink-muted">
-            No player by that name on the rankings lists yet.
+            No player by that name on the lists. Try a surname, or another spelling.
           </p>
-        ) : (
+        ) : null}
+        {!isLoading && !isError && trimmedQuery !== '' && searchResults.length > 0 ? (
           searchResults.map((entry) => (
             <PlayerListRow
               key={`${entry.tour}-${entry.playerId}`}
@@ -149,7 +155,7 @@ export function PlayersPage(): ReactElement {
               onToggleFavourite={toggleFavourite}
             />
           ))
-        )}
+        ) : null}
       </section>
       {paywallPlayerId !== null ? (
         <MembershipPanel onContinue={acceptPlusPreview} onDismiss={dismissPaywall} />

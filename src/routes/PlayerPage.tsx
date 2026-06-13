@@ -1,6 +1,7 @@
 import { Link, useParams } from '@tanstack/react-router';
 import type { ReactElement } from 'react';
 import { AlertControls } from '@/components/alerts/AlertControls';
+import { SectionLabel } from '@/components/layout/SectionLabel';
 import { NextMatchCard } from '@/components/matches/NextMatchCard';
 import { MembershipPanel } from '@/components/membership/MembershipPanel';
 import { useFavourites } from '@/hooks/useFavourites';
@@ -103,7 +104,7 @@ export function PlayerPage(): ReactElement {
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-[3fr_2fr]">
       <div className="space-y-6">
         <header className="space-y-1">
-          <h1 className="font-display text-3xl uppercase tracking-[0.06em]">{profile.fullName}</h1>
+          <h1 className="font-display text-name-lg">{profile.fullName}</h1>
           <p className="font-body text-sm text-ink-muted">{profileCareerLine(profile)}</p>
           <p className="font-body text-sm text-ink-muted">{profileStyleLine(profile)}</p>
         </header>
@@ -117,26 +118,20 @@ export function PlayerPage(): ReactElement {
         </button>
         {profile.formLastTen.length > 0 ? (
           <section className="space-y-2">
-            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-ink-muted">
-              Form
-            </h2>
+            <SectionLabel>Form</SectionLabel>
             <FormStrip form={profile.formLastTen} />
           </section>
         ) : null}
         <HonoursPanel profile={profile} />
         {hasSurfaceRates(profile.surfaceWinRates) ? (
           <section className="space-y-1">
-            <h2 className="font-display text-sm uppercase tracking-[0.18em] text-ink-muted">
-              Surfaces
-            </h2>
+            <SectionLabel>Surfaces</SectionLabel>
             <p className="font-body text-sm">{surfaceSummaryLine(profile.surfaceWinRates)}</p>
           </section>
         ) : null}
       </div>
       <div className="space-y-3">
-        <h2 className="font-display text-sm uppercase tracking-[0.18em] text-ink-muted">
-          Next match
-        </h2>
+        <SectionLabel>Next match</SectionLabel>
         {nextMatch !== undefined ? (
           <NextMatchCard match={nextMatch} nowMs={nowMs} timeZone={timeZone} />
         ) : (

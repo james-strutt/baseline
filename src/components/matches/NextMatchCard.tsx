@@ -13,9 +13,7 @@ export interface NextMatchCardProps {
 export function NextMatchCard({ match, nowMs, timeZone }: NextMatchCardProps): ReactElement {
   return (
     <article className="rounded-plaque border border-ink/20 bg-canvas p-5">
-      <h3 className="font-display text-lg uppercase tracking-[0.08em]">
-        Next — {matchupLabel(match)}
-      </h3>
+      <h3 className="font-display text-name-sm">Next — {matchupLabel(match)}</h3>
       <p className="mt-1.5 font-body text-[15px]">
         <span className="font-score tabular-nums">
           {formatCountdown(nowMs, match.scheduledUtc)}

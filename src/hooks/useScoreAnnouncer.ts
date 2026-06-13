@@ -36,16 +36,20 @@ export function useScoreAnnouncer(): string {
         continue;
       }
       const previous = lastCallByFixture.current.get(match.fixtureId);
-      lastCallByFixture.current.set(match.fixtureId, call);
-      if (
-        previous !== undefined &&
-        previous !== call &&
-        now - lastAnnouncedAt.current > MIN_ANNOUNCEMENT_INTERVAL_MS
-      ) {
-        lastAnnouncedAt.current = now;
-        setAnnouncement(call);
-        break;
+      if (previous === undefined) {
+        // First sighting establishes the baseline without announcing.
+        lastCallByFixture.current.set(match.fixtureId, call);
+        continue;
       }
+      if (previous === call || now - lastAnnouncedAt.current <= MIN_ANNOUNCEMENT_INTERVAL_MS) {
+        // Unchanged, or throttled — leave the stale call so the change is
+        // re-detected next tick rather than silently swallowed.
+        continue;
+      }
+      lastCallByFixture.current.set(match.fixtureId, call);
+      lastAnnouncedAt.current = now;
+      setAnnouncement(call);
+      break;
     }
   }, [matches, favouritePlayerIds]);
 

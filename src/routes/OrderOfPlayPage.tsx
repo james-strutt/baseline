@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import type { ReactElement } from 'react';
+import { SectionLabel } from '@/components/layout/SectionLabel';
 import { LiveDot } from '@/components/scoreboard/LiveDot';
 import { useFavourites } from '@/hooks/useFavourites';
 import { useOrderOfPlay } from '@/hooks/useTennisData';
@@ -64,14 +65,15 @@ export function OrderOfPlayPage(): ReactElement {
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <header className="space-y-1">
-        <h1 className="font-display text-2xl uppercase tracking-[0.12em]">Order of Play</h1>
+        <h1 className="font-display text-name">Order of Play</h1>
         <p className="font-body text-xs text-ink-muted">Times shown in your local time</p>
       </header>
       {segments.map((segment) => (
-        <section key={`${segment.period}-${segment.matches[0]?.fixtureId ?? segment.label}`}>
-          <h2 className="mb-1 font-display text-sm uppercase tracking-[0.18em] text-ink-muted">
-            {segment.label}
-          </h2>
+        <section
+          key={`${segment.period}-${segment.matches[0]?.fixtureId ?? segment.label}`}
+          className="space-y-1"
+        >
+          <SectionLabel>{segment.label}</SectionLabel>
           {segment.matches.map((match) => (
             <OrderOfPlayRow
               key={match.fixtureId}

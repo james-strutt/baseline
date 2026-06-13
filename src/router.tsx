@@ -20,7 +20,7 @@ import { RankingsPage } from '@/routes/RankingsPage';
 function RootLayout(): ReactElement {
   const scoreAnnouncement = useScoreAnnouncer();
   return (
-    <div className="min-h-screen">
+    <div id="app-shell" className="min-h-screen">
       <a href="#main-content" className="sr-only skip-link font-body text-sm">
         Skip to scores
       </a>

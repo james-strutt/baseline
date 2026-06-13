@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+import { SectionLabel } from '@/components/layout/SectionLabel';
 import { ScorePlaque } from '@/components/scoreboard/ScorePlaque';
 import { TimePill } from '@/components/time/TimePill';
 import { useFavourites } from '@/hooks/useFavourites';
@@ -9,9 +10,6 @@ import { youtubeHighlightsSearchUrl } from '@/utils/links/youtubeHighlights';
 import { matchInvolvesPlayer } from '@/utils/matches/matchInvolvesPlayer';
 import { matchupLabel } from '@/utils/score/formatScoreline';
 import { formatLocalDate } from '@/utils/time';
-
-const BRIEF_HEADING_CLASS =
-  'font-display text-[13px] uppercase tracking-[0.22em] text-ink-muted';
 
 function TodayRow({
   match,
@@ -56,7 +54,7 @@ export function BriefPage(): ReactElement {
         </p>
       </header>
       <section className="space-y-3">
-        <h2 className={BRIEF_HEADING_CLASS}>While you slept</h2>
+        <SectionLabel>While you slept</SectionLabel>
         {results.length === 0 ? (
           <p className="font-body text-[15px] text-ink-muted">
             No overnight results filed — play resumes today.
@@ -77,7 +75,7 @@ export function BriefPage(): ReactElement {
         ))}
       </section>
       <section>
-        <h2 className={BRIEF_HEADING_CLASS}>Today, your time</h2>
+        <SectionLabel>Today, your time</SectionLabel>
         <div className="mt-2">
           {todaysMatches.map((match) => (
             <TodayRow
@@ -91,7 +89,7 @@ export function BriefPage(): ReactElement {
       </section>
       {matchCentre?.storyline !== undefined ? (
         <section className="space-y-2">
-          <h2 className={BRIEF_HEADING_CLASS}>One storyline</h2>
+          <SectionLabel>One storyline</SectionLabel>
           <p className="font-body text-[15px]">{matchCentre.storyline}</p>
         </section>
       ) : null}

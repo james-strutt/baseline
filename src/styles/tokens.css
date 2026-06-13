@@ -57,7 +57,7 @@
 
   --text-label: 0.8125rem;
   --text-label--line-height: 1.2;
-  --text-label--letter-spacing: 0.18em;
+  --text-label--letter-spacing: 0.2em;
 
   --text-name-sm: 1.125rem;
   --text-name-sm--line-height: 1.15;
@@ -75,9 +75,6 @@
   --text-display-hero--line-height: 1;
   --text-display-hero--letter-spacing: -0.015em;
 
-  --text-score-hero: clamp(2.5rem, 7vw, 3.75rem);
-  --text-score-hero--line-height: 1;
-
   /* Crisp plaque edges, not pill shapes */
   --radius-plaque: 4px;
 }
@@ -90,7 +87,8 @@
  *   ink (#0E3B27)        10.4:1  — body & headings (AAA)
  *   ink-muted (#547362)   4.77:1 — secondary text (AA, the floor)
  *   ink-faint (#6F8A7C)   3.1:1  — non-text / decorative only
- *   gilt (#A8893B)        3.0:1  — UI edges / focus ring only (1.4.11), never body text
+ *   gilt (#A8893B)        3.0:1  — UI edges / focus ring, and engraved honours-board
+ *                                  lettering on green panels; never body text on canvas
  * Never reintroduce opacity-on-green for text: centre-court/50 = 2.81:1,
  * /40 = 2.22:1 both FAIL AA. Use the named -muted/-faint tiers instead.
  */
